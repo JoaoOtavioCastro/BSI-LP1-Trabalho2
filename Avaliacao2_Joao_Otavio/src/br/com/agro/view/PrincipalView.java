@@ -4,6 +4,10 @@
  */
 package br.com.agro.view;
 
+import javax.swing.JOptionPane;
+import java.awt.Image;
+import java.awt.Graphics;
+import javax.swing.ImageIcon;
 /**
  *
  * @author jotavio
@@ -15,6 +19,7 @@ public class PrincipalView extends javax.swing.JFrame {
      */
     public PrincipalView() {
         initComponents();
+        this.setLocationRelativeTo(null);
     }
 
     /**
@@ -29,81 +34,73 @@ public class PrincipalView extends javax.swing.JFrame {
         desktopPane = new javax.swing.JDesktopPane();
         menuBar = new javax.swing.JMenuBar();
         fileMenu = new javax.swing.JMenu();
-        openMenuItem = new javax.swing.JMenuItem();
-        saveMenuItem = new javax.swing.JMenuItem();
-        saveAsMenuItem = new javax.swing.JMenuItem();
-        exitMenuItem = new javax.swing.JMenuItem();
+        itemMFazenda = new javax.swing.JMenuItem();
+        itemMFornecedor = new javax.swing.JMenuItem();
+        itemMPlantacao = new javax.swing.JMenuItem();
+        itemMProduto = new javax.swing.JMenuItem();
+        itemMProprietario = new javax.swing.JMenuItem();
         editMenu = new javax.swing.JMenu();
-        cutMenuItem = new javax.swing.JMenuItem();
-        copyMenuItem = new javax.swing.JMenuItem();
-        pasteMenuItem = new javax.swing.JMenuItem();
-        deleteMenuItem = new javax.swing.JMenuItem();
-        helpMenu = new javax.swing.JMenu();
-        contentMenuItem = new javax.swing.JMenuItem();
-        aboutMenuItem = new javax.swing.JMenuItem();
+        itemMTratamento = new javax.swing.JMenuItem();
+        Menu_Exit = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         fileMenu.setMnemonic('f');
-        fileMenu.setText("File");
+        fileMenu.setText("Cadastro");
 
-        openMenuItem.setMnemonic('o');
-        openMenuItem.setText("Open");
-        fileMenu.add(openMenuItem);
+        itemMFazenda.setMnemonic('o');
+        itemMFazenda.setText("Fazenda");
+        fileMenu.add(itemMFazenda);
 
-        saveMenuItem.setMnemonic('s');
-        saveMenuItem.setText("Save");
-        fileMenu.add(saveMenuItem);
-
-        saveAsMenuItem.setMnemonic('a');
-        saveAsMenuItem.setText("Save As ...");
-        saveAsMenuItem.setDisplayedMnemonicIndex(5);
-        fileMenu.add(saveAsMenuItem);
-
-        exitMenuItem.setMnemonic('x');
-        exitMenuItem.setText("Exit");
-        exitMenuItem.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                exitMenuItemActionPerformed(evt);
+        itemMFornecedor.setMnemonic('s');
+        itemMFornecedor.setText("Fornecedor");
+        itemMFornecedor.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                itemMFornecedorMouseClicked(evt);
             }
         });
-        fileMenu.add(exitMenuItem);
+        itemMFornecedor.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                itemMFornecedorActionPerformed(evt);
+            }
+        });
+        fileMenu.add(itemMFornecedor);
+
+        itemMPlantacao.setMnemonic('a');
+        itemMPlantacao.setText("Plantação");
+        fileMenu.add(itemMPlantacao);
+
+        itemMProduto.setMnemonic('x');
+        itemMProduto.setText("Produto");
+        itemMProduto.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                itemMProdutoActionPerformed(evt);
+            }
+        });
+        fileMenu.add(itemMProduto);
+
+        itemMProprietario.setText("Proprietário");
+        fileMenu.add(itemMProprietario);
 
         menuBar.add(fileMenu);
 
         editMenu.setMnemonic('e');
-        editMenu.setText("Edit");
+        editMenu.setText("Realização");
 
-        cutMenuItem.setMnemonic('t');
-        cutMenuItem.setText("Cut");
-        editMenu.add(cutMenuItem);
-
-        copyMenuItem.setMnemonic('y');
-        copyMenuItem.setText("Copy");
-        editMenu.add(copyMenuItem);
-
-        pasteMenuItem.setMnemonic('p');
-        pasteMenuItem.setText("Paste");
-        editMenu.add(pasteMenuItem);
-
-        deleteMenuItem.setMnemonic('d');
-        deleteMenuItem.setText("Delete");
-        editMenu.add(deleteMenuItem);
+        itemMTratamento.setMnemonic('t');
+        itemMTratamento.setText("Tratamento");
+        editMenu.add(itemMTratamento);
 
         menuBar.add(editMenu);
 
-        helpMenu.setMnemonic('h');
-        helpMenu.setText("Help");
-
-        contentMenuItem.setMnemonic('c');
-        contentMenuItem.setText("Contents");
-        helpMenu.add(contentMenuItem);
-
-        aboutMenuItem.setMnemonic('a');
-        aboutMenuItem.setText("About");
-        helpMenu.add(aboutMenuItem);
-
-        menuBar.add(helpMenu);
+        Menu_Exit.setMnemonic('h');
+        Menu_Exit.setText("Sair");
+        Menu_Exit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                Menu_ExitActionPerformed(evt);
+            }
+        });
+        menuBar.add(Menu_Exit);
 
         setJMenuBar(menuBar);
 
@@ -111,19 +108,31 @@ public class PrincipalView extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(desktopPane, javax.swing.GroupLayout.DEFAULT_SIZE, 400, Short.MAX_VALUE)
+            .addComponent(desktopPane, javax.swing.GroupLayout.DEFAULT_SIZE, 1225, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(desktopPane, javax.swing.GroupLayout.DEFAULT_SIZE, 279, Short.MAX_VALUE)
+            .addComponent(desktopPane, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 829, Short.MAX_VALUE)
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void exitMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exitMenuItemActionPerformed
-        System.exit(0);
-    }//GEN-LAST:event_exitMenuItemActionPerformed
+    private void itemMProdutoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemMProdutoActionPerformed
+        
+    }//GEN-LAST:event_itemMProdutoActionPerformed
+
+    private void Menu_ExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Menu_ExitActionPerformed
+        sair();
+    }//GEN-LAST:event_Menu_ExitActionPerformed
+
+    private void itemMFornecedorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemMFornecedorActionPerformed
+        abreFornecedorVIEW();
+    }//GEN-LAST:event_itemMFornecedorActionPerformed
+
+    private void itemMFornecedorMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_itemMFornecedorMouseClicked
+        abreFornecedorVIEW();
+    }//GEN-LAST:event_itemMFornecedorMouseClicked
 
     /**
      * @param args the command line arguments
@@ -159,23 +168,31 @@ public class PrincipalView extends javax.swing.JFrame {
             }
         });
     }
-
+    private void sair(){
+        Object[] options = { "Sair", "Cancelar" };
+        if(JOptionPane.showOptionDialog(null, "Deseja Sair do Sistema", "Informação", 
+                JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null, options, options[0]) == 0){
+            System.exit(0);
+        } 
+    } 
+ private void abreFornecedorVIEW(){
+        FornecedorVIEW fornecedorVIEW = new FornecedorVIEW();
+        this.desktopPane.add(fornecedorVIEW);
+        fornecedorVIEW.setVisible(true); 
+        fornecedorVIEW.setPosicao();
+    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JMenuItem aboutMenuItem;
-    private javax.swing.JMenuItem contentMenuItem;
-    private javax.swing.JMenuItem copyMenuItem;
-    private javax.swing.JMenuItem cutMenuItem;
-    private javax.swing.JMenuItem deleteMenuItem;
+    private javax.swing.JMenu Menu_Exit;
     private javax.swing.JDesktopPane desktopPane;
     private javax.swing.JMenu editMenu;
-    private javax.swing.JMenuItem exitMenuItem;
     private javax.swing.JMenu fileMenu;
-    private javax.swing.JMenu helpMenu;
+    private javax.swing.JMenuItem itemMFazenda;
+    private javax.swing.JMenuItem itemMFornecedor;
+    private javax.swing.JMenuItem itemMPlantacao;
+    private javax.swing.JMenuItem itemMProduto;
+    private javax.swing.JMenuItem itemMProprietario;
+    private javax.swing.JMenuItem itemMTratamento;
     private javax.swing.JMenuBar menuBar;
-    private javax.swing.JMenuItem openMenuItem;
-    private javax.swing.JMenuItem pasteMenuItem;
-    private javax.swing.JMenuItem saveAsMenuItem;
-    private javax.swing.JMenuItem saveMenuItem;
     // End of variables declaration//GEN-END:variables
 
 }
