@@ -4,11 +4,11 @@
  * and open the template in the editor.
  */
 package br.com.agro.view;
-
-import br.com.agro.ctr.FornecedorCTR;
-import br.com.agro.dto.FornecedorDTO;
+import br.com.agro.ctr.ProprietarioCTR;
+import br.com.agro.dto.ProprietarioDTO;
 import java.awt.Dimension;
 import java.sql.ResultSet;
+import java.text.SimpleDateFormat;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
@@ -18,11 +18,12 @@ import javax.swing.table.DefaultTableModel;
  */
 public class ProprietarioVIEW extends javax.swing.JInternalFrame {
 
-    FornecedorDTO fdto = new FornecedorDTO();
-    FornecedorCTR fctr = new FornecedorCTR();
+    ProprietarioDTO fdto = new ProprietarioDTO();
+    ProprietarioCTR fctr = new ProprietarioCTR();
     int gravar_alterar;
+        SimpleDateFormat data_format= new SimpleDateFormat("dd/mm/yyyy");
     ResultSet rs = null;
-    DefaultTableModel modelo_jtlConsultarFornecedor;
+    DefaultTableModel modelo_jtlConsultarProprietario;
 
     public void setPosicao() {
         Dimension d = this.getDesktopPane().getSize();
@@ -30,13 +31,13 @@ public class ProprietarioVIEW extends javax.swing.JInternalFrame {
     }
 
     /**
-     * Creates new form FornecedorVIEW
+     * Creates new form ProprietarioVIEW
      */
     public ProprietarioVIEW() {
         initComponents();
         liberaCampos(false);
         liberaBotoes(true, false, false, false);
-        modelo_jtlConsultarFornecedor = (DefaultTableModel) jtlConsultaFornecedor.getModel();
+        modelo_jtlConsultarProprietario = (DefaultTableModel) jtlConsultaProprietario.getModel();
                 preencheTabela();
 
     }
@@ -58,12 +59,12 @@ public class ProprietarioVIEW extends javax.swing.JInternalFrame {
         jLabel3 = new javax.swing.JLabel();
         txtTelefone = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
-        txtTelefone1 = new javax.swing.JTextField();
+        txtDtaNasc = new javax.swing.JTextField();
         jPanel2 = new javax.swing.JPanel();
         jLabel4 = new javax.swing.JLabel();
         txtConsulta = new javax.swing.JTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jtlConsultaFornecedor = new javax.swing.JTable();
+        jtlConsultaProprietario = new javax.swing.JTable();
         btnPesquisa = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
         btnNovo = new javax.swing.JButton();
@@ -106,7 +107,7 @@ public class ProprietarioVIEW extends javax.swing.JInternalFrame {
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jLabel5)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtTelefone1))))
+                        .addComponent(txtDtaNasc))))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -126,7 +127,7 @@ public class ProprietarioVIEW extends javax.swing.JInternalFrame {
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel5)
-                    .addComponent(txtTelefone1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtDtaNasc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -140,7 +141,7 @@ public class ProprietarioVIEW extends javax.swing.JInternalFrame {
             }
         });
 
-        jtlConsultaFornecedor.setModel(new javax.swing.table.DefaultTableModel(
+        jtlConsultaProprietario.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -156,15 +157,15 @@ public class ProprietarioVIEW extends javax.swing.JInternalFrame {
                 return canEdit [columnIndex];
             }
         });
-        jtlConsultaFornecedor.addMouseListener(new java.awt.event.MouseAdapter() {
+        jtlConsultaProprietario.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jtlConsultaFornecedorMouseClicked(evt);
+                jtlConsultaProprietarioMouseClicked(evt);
             }
         });
-        jScrollPane1.setViewportView(jtlConsultaFornecedor);
-        if (jtlConsultaFornecedor.getColumnModel().getColumnCount() > 0) {
-            jtlConsultaFornecedor.getColumnModel().getColumn(0).setResizable(false);
-            jtlConsultaFornecedor.getColumnModel().getColumn(1).setResizable(false);
+        jScrollPane1.setViewportView(jtlConsultaProprietario);
+        if (jtlConsultaProprietario.getColumnModel().getColumnCount() > 0) {
+            jtlConsultaProprietario.getColumnModel().getColumn(0).setResizable(false);
+            jtlConsultaProprietario.getColumnModel().getColumn(1).setResizable(false);
         }
 
         btnPesquisa.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/com/agro/view/imagens/pesquisar.png"))); // NOI18N
@@ -345,10 +346,10 @@ public class ProprietarioVIEW extends javax.swing.JInternalFrame {
         preencheTabela();
     }//GEN-LAST:event_txtConsultaKeyPressed
 
-    private void jtlConsultaFornecedorMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jtlConsultaFornecedorMouseClicked
-        preencheCampos(Integer.parseInt(String.valueOf(jtlConsultaFornecedor.getValueAt(jtlConsultaFornecedor.getSelectedRow(), 0))));
+    private void jtlConsultaProprietarioMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jtlConsultaProprietarioMouseClicked
+        preencheCampos(Integer.parseInt(String.valueOf(jtlConsultaProprietario.getValueAt(jtlConsultaProprietario.getSelectedRow(), 0))));
         liberaBotoes(false, true, true, true);
-    }//GEN-LAST:event_jtlConsultaFornecedorMouseClicked
+    }//GEN-LAST:event_jtlConsultaProprietarioMouseClicked
 
     private void btnExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExcluirActionPerformed
         excluir();
@@ -368,7 +369,7 @@ public class ProprietarioVIEW extends javax.swing.JInternalFrame {
     private void gravar() {
         try {
             pegaValores();
-            JOptionPane.showMessageDialog(null, fctr.inserirFornecedor(fdto));
+            JOptionPane.showMessageDialog(null, fctr.inserirProprietario(fdto));
         } catch (Exception e) {
             System.out.println("Erro: " + e.getMessage());
         }
@@ -377,7 +378,7 @@ public class ProprietarioVIEW extends javax.swing.JInternalFrame {
     private void alterar() {
         try {
             pegaValores();
-            JOptionPane.showMessageDialog(null, fctr.alterarFornecedor(fdto));
+            JOptionPane.showMessageDialog(null, fctr.alterarProprietario(fdto));
         } catch (Exception e) {
             System.out.println("Erro: " + e.getMessage());
         }
@@ -385,9 +386,9 @@ public class ProprietarioVIEW extends javax.swing.JInternalFrame {
 
     private void excluir() {
         try {
-            if (JOptionPane.showConfirmDialog(null, "Deseja Realmente excluir o Fornecedor?",
+            if (JOptionPane.showConfirmDialog(null, "Deseja Realmente excluir o Proprietario?",
                     "Aviso", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
-                JOptionPane.showMessageDialog(null, fctr.excluirFornecedor(fdto));
+                JOptionPane.showMessageDialog(null, fctr.excluirProprietario(fdto));
             }
         } catch (Exception e) {
             System.out.println("Erro: " + e.getMessage());
@@ -398,6 +399,7 @@ public class ProprietarioVIEW extends javax.swing.JInternalFrame {
         txtNome.setEnabled(a);
         txtTelefone.setEnabled(a);
         txtCnpj.setEnabled(a);
+        txtDtaNasc.setEnabled(a);
     }
 
     private void liberaBotoes(boolean a, boolean b, boolean c, boolean d) {
@@ -411,17 +413,18 @@ public class ProprietarioVIEW extends javax.swing.JInternalFrame {
         txtNome.setText("");
         txtCnpj.setText("");
         txtTelefone.setText("");
+        txtDtaNasc.setText("");
     }
 
     private void preencheTabela() {
         try {
-            modelo_jtlConsultarFornecedor.setNumRows(0);
-            fdto.setNome_for(txtConsulta.getText());
-            rs = fctr.consultarFornecedor(fdto, 1);
+            modelo_jtlConsultarProprietario.setNumRows(0);
+            fdto.setNome_ppt(txtConsulta.getText());
+            rs = fctr.consultarProprietario(fdto, 1);
             while (rs.next()) {
-                modelo_jtlConsultarFornecedor.addRow(new Object[]{
-                    rs.getString("id_for"),
-                    rs.getString("nome_for"),});
+                modelo_jtlConsultarProprietario.addRow(new Object[]{
+                    rs.getString("id_ppt"),
+                    rs.getString("nome_ppt"),});
             }
         } catch (Exception e) {
             System.out.println("Erro: " + e.getMessage());
@@ -431,15 +434,16 @@ public class ProprietarioVIEW extends javax.swing.JInternalFrame {
 
     }
 
-    private void preencheCampos(int id_for) {
+    private void preencheCampos(int id_ppt) {
         try {
-            fdto.setId_for(id_for);
-            rs = fctr.consultarFornecedor(fdto, 2);
+            fdto.setId_ppt(id_ppt);
+            rs = fctr.consultarProprietario(fdto, 2);
             if (rs.next()) {
                 limpaCampos();
-                txtNome.setText(rs.getString("nome_for"));
-                txtCnpj.setText(rs.getString("cnpj_for"));
-                txtTelefone.setText(rs.getString("tel_for"));
+                txtNome.setText(rs.getString("nome_ppt"));
+                txtCnpj.setText(rs.getString("cnpj_ppt"));
+                txtTelefone.setText(rs.getString("tel_ppt"));
+                txtDtaNasc.setText(rs.getString("dtanasc_ppt"));
                 gravar_alterar = 2;
                 liberaCampos(true);
             }
@@ -451,9 +455,14 @@ public class ProprietarioVIEW extends javax.swing.JInternalFrame {
     }
 
     private void pegaValores() {
-        fdto.setNome_for(txtNome.getText());
-        fdto.setTel_for(txtTelefone.getText());
-        fdto.setCnpj_for(txtCnpj.getText());
+        try{
+        fdto.setNome_ppt(txtNome.getText());
+        fdto.setTel_ppt(txtTelefone.getText());
+        fdto.setCnpj_ppt(txtCnpj.getText());
+        fdto.setDtaNasc_ppt(data_format.parse(txtDtaNasc.getText()));
+           }catch (Exception e){
+               System.out.println("Erro: "+e.getMessage());
+           }
     }
 
 
@@ -473,11 +482,11 @@ public class ProprietarioVIEW extends javax.swing.JInternalFrame {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jtlConsultaFornecedor;
+    private javax.swing.JTable jtlConsultaProprietario;
     private javax.swing.JTextField txtCnpj;
     private javax.swing.JTextField txtConsulta;
+    private javax.swing.JTextField txtDtaNasc;
     private javax.swing.JTextField txtNome;
     private javax.swing.JTextField txtTelefone;
-    private javax.swing.JTextField txtTelefone1;
     // End of variables declaration//GEN-END:variables
 }

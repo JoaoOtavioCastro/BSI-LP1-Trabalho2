@@ -80,6 +80,11 @@ public class PrincipalView extends javax.swing.JFrame {
         fileMenu.add(itemMProduto);
 
         itemMProprietario.setText("Proprietário");
+        itemMProprietario.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                itemMProprietarioActionPerformed(evt);
+            }
+        });
         fileMenu.add(itemMProprietario);
 
         menuBar.add(fileMenu);
@@ -95,6 +100,11 @@ public class PrincipalView extends javax.swing.JFrame {
 
         Menu_Exit.setMnemonic('h');
         Menu_Exit.setText("Sair");
+        Menu_Exit.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                Menu_ExitMouseClicked(evt);
+            }
+        });
         Menu_Exit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 Menu_ExitActionPerformed(evt);
@@ -133,6 +143,14 @@ public class PrincipalView extends javax.swing.JFrame {
     private void itemMFornecedorMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_itemMFornecedorMouseClicked
         abreFornecedorVIEW();
     }//GEN-LAST:event_itemMFornecedorMouseClicked
+
+    private void itemMProprietarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemMProprietarioActionPerformed
+       abreProprietarioVIEW();
+    }//GEN-LAST:event_itemMProprietarioActionPerformed
+
+    private void Menu_ExitMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_Menu_ExitMouseClicked
+        sair();
+    }//GEN-LAST:event_Menu_ExitMouseClicked
 
     /**
      * @param args the command line arguments
@@ -180,6 +198,12 @@ public class PrincipalView extends javax.swing.JFrame {
         this.desktopPane.add(fornecedorVIEW);
         fornecedorVIEW.setVisible(true); 
         fornecedorVIEW.setPosicao();
+    }
+ private void abreProprietarioVIEW(){
+        ProprietarioVIEW proprietarioVIEW = new ProprietarioVIEW();
+        this.desktopPane.add(proprietarioVIEW);
+        proprietarioVIEW.setVisible(true); 
+        proprietarioVIEW.setPosicao();
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenu Menu_Exit;
