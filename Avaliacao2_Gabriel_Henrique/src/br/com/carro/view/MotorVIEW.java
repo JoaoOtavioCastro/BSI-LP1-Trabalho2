@@ -1,14 +1,44 @@
 package br.com.carro.view;
 
+import br.com.carro.ctr.CarroCTR;
+import br.com.carro.ctr.MotorCTR;
+import br.com.carro.dto.CarroDTO;
+import br.com.carro.dto.MotorDTO;
+import java.awt.Dimension;
+import java.sql.ResultSet;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+
 public class MotorVIEW extends javax.swing.JInternalFrame {
 
     /**
      * Creates new form DonoVIEW
      */
+    CarroDTO carroDTO = new CarroDTO(); //Cria um objeto fonoDTO
+    CarroCTR carroCTR = new CarroCTR(); //Cria um objeto fonoCTR
+    MotorDTO motorDTO = new MotorDTO(); //Cria um objeto motorDTO
+    MotorCTR motorCTR = new MotorCTR(); //Cria um objeto motorCTR
+    
+    int gravar_alterar; //Variavel usada para saber se esta alterando ou incluindo
+    
+    
+    ResultSet rs; //Variavel usada para preenchimeto da tabela e dos campos
+    DefaultTableModel modelo_jtl_consultar_motor; //Variavel para guardar o modelo da tabela
+    DefaultTableModel modelo_jtl_consultar_carro; //Variavel para guardar o modelo da tabela
+
+    /**
+     * Creates new form CarroVIEW
+     */
     public MotorVIEW() {
         initComponents();
+        
+        //Chama todos os métodos liberaCampos
+        liberaCampos(false);
+        //Chama o método liberaBotoes
+        liberaBotoes(true, false, false, false, true);
+        modelo_jtl_consultar_motor = (DefaultTableModel) jtl_Motor.getModel();
+        modelo_jtl_consultar_carro = (DefaultTableModel) jtl_Carro.getModel();
     }
-
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -27,7 +57,7 @@ public class MotorVIEW extends javax.swing.JInternalFrame {
         bloco_mot = new javax.swing.JTextField();
         potencia_mot = new javax.swing.JTextField();
         jLabel6 = new javax.swing.JLabel();
-        dono_mot = new javax.swing.JTextField();
+        carro_mot = new javax.swing.JTextField();
         btnPesquisar1 = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         jtl_Carro = new javax.swing.JTable();
@@ -37,7 +67,7 @@ public class MotorVIEW extends javax.swing.JInternalFrame {
         pesquisa_nome_mot = new javax.swing.JTextField();
         btnPesquisar = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jtl_motor = new javax.swing.JTable();
+        jtl_Motor = new javax.swing.JTable();
         jPanel3 = new javax.swing.JPanel();
         btnNovo = new javax.swing.JButton();
         btnSalvar = new javax.swing.JButton();
@@ -87,6 +117,11 @@ public class MotorVIEW extends javax.swing.JInternalFrame {
                 return canEdit [columnIndex];
             }
         });
+        jtl_Carro.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jtl_CarroMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(jtl_Carro);
         if (jtl_Carro.getColumnModel().getColumnCount() > 0) {
             jtl_Carro.getColumnModel().getColumn(0).setResizable(false);
@@ -109,8 +144,8 @@ public class MotorVIEW extends javax.swing.JInternalFrame {
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                                     .addGroup(jPanel1Layout.createSequentialGroup()
                                         .addComponent(jLabel6)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 25, Short.MAX_VALUE)
-                                        .addComponent(dono_mot, javax.swing.GroupLayout.PREFERRED_SIZE, 194, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 42, Short.MAX_VALUE)
+                                        .addComponent(carro_mot, javax.swing.GroupLayout.PREFERRED_SIZE, 194, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addGap(18, 18, 18)
                                         .addComponent(btnPesquisar1, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE))
                                     .addGroup(jPanel1Layout.createSequentialGroup()
@@ -123,7 +158,7 @@ public class MotorVIEW extends javax.swing.JInternalFrame {
                                             .addComponent(potencia_mot))))))
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addGap(0, 2, Short.MAX_VALUE)
+                        .addGap(0, 24, Short.MAX_VALUE)
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 325, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
@@ -143,7 +178,7 @@ public class MotorVIEW extends javax.swing.JInternalFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(btnPesquisar1)
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(dono_mot, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(carro_mot, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jLabel6)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -163,7 +198,7 @@ public class MotorVIEW extends javax.swing.JInternalFrame {
             }
         });
 
-        jtl_motor.setModel(new javax.swing.table.DefaultTableModel(
+        jtl_Motor.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -179,10 +214,15 @@ public class MotorVIEW extends javax.swing.JInternalFrame {
                 return canEdit [columnIndex];
             }
         });
-        jScrollPane2.setViewportView(jtl_motor);
-        if (jtl_motor.getColumnModel().getColumnCount() > 0) {
-            jtl_motor.getColumnModel().getColumn(0).setResizable(false);
-            jtl_motor.getColumnModel().getColumn(1).setResizable(false);
+        jtl_Motor.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jtl_MotorMouseClicked(evt);
+            }
+        });
+        jScrollPane2.setViewportView(jtl_Motor);
+        if (jtl_Motor.getColumnModel().getColumnCount() > 0) {
+            jtl_Motor.getColumnModel().getColumn(0).setResizable(false);
+            jtl_Motor.getColumnModel().getColumn(1).setResizable(false);
         }
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
@@ -221,7 +261,7 @@ public class MotorVIEW extends javax.swing.JInternalFrame {
                             .addComponent(jLabel7)
                             .addComponent(pesquisa_nome_mot, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addComponent(btnPesquisar))
-                .addContainerGap(181, Short.MAX_VALUE))
+                .addContainerGap(184, Short.MAX_VALUE))
             .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                     .addContainerGap(88, Short.MAX_VALUE)
@@ -364,7 +404,8 @@ public class MotorVIEW extends javax.swing.JInternalFrame {
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
         limpaCampos();
         liberaCampos(false);
-        modelo_jtl_consultar_cliente.setNumRows(0);
+        modelo_jtl_consultar_motor.setNumRows(0);
+        modelo_jtl_consultar_carro.setNumRows(0);
         liberaBotoes(true, false, false, false, true);
         gravar_alterar=0;
     }//GEN-LAST:event_btnCancelarActionPerformed
@@ -374,7 +415,8 @@ public class MotorVIEW extends javax.swing.JInternalFrame {
         limpaCampos();
         liberaCampos(false);
         liberaBotoes(true, false, false, false, true);
-        modelo_jtl_consultar_cliente.setNumRows(0);
+        modelo_jtl_consultar_carro.setNumRows(0);
+        modelo_jtl_consultar_motor.setNumRows(0);
     }//GEN-LAST:event_btnExcluirActionPerformed
 
     private void btnSairActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSairActionPerformed
@@ -382,13 +424,215 @@ public class MotorVIEW extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_btnSairActionPerformed
 
     private void btnPesquisarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPesquisarActionPerformed
-        preencheTabela(pesquisa_nome_mot.getText());
+        preencheTabelaMotor(pesquisa_nome_mot.getText());
     }//GEN-LAST:event_btnPesquisarActionPerformed
 
     private void btnPesquisar1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPesquisar1ActionPerformed
-        // TODO add your handling code here:
+        preencheTabelaCarro(carro_mot.getText());
     }//GEN-LAST:event_btnPesquisar1ActionPerformed
 
+    private void jtl_CarroMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jtl_CarroMouseClicked
+    }//GEN-LAST:event_jtl_CarroMouseClicked
+
+    private void jtl_MotorMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jtl_MotorMouseClicked
+        preencheCamposMotor(Integer.parseInt(String.valueOf(
+                jtl_Carro.getValueAt(
+                jtl_Carro.getSelectedRow(), 0))));
+        liberaBotoes(false, true, true, true, true);
+    }//GEN-LAST:event_jtl_MotorMouseClicked
+
+    
+    
+    
+     public void setPosicao() {
+        Dimension d = this.getDesktopPane().getSize();
+        this.setLocation((d.width - this.getSize().width) / 2, (d.height - this.getSize().height) / 2); 
+    }//Fecha método setPosicao()
+    
+    
+    
+    /**
+     * Método utilizado para gravar os dados do motor.
+     */
+    private void gravar(){
+        try{           
+            motorDTO.setPotencia_mot(Integer.parseInt(potencia_mot.getText()));
+            motorDTO.setQtdBloco_mot(Integer.parseInt(bloco_mot.getText()));
+            carroDTO.setId_car(Integer.parseInt(String.valueOf(
+                    jtl_Carro.getValueAt(
+                    jtl_Carro.getSelectedRow(), 0))));
+
+            JOptionPane.showMessageDialog(null,
+                    motorCTR.inserirMotor(motorDTO, carroDTO)
+            );
+        }
+        catch(Exception e){
+            System.out.println("Erro ao Gravar" + e.getMessage());
+        }
+    }//Fecha método gravar()
+    
+    
+    /**
+     * Método utilizado para alterar os dados do motor.
+     */
+    private void alterar(){
+        try{
+            motorDTO.setPotencia_mot(Integer.parseInt(potencia_mot.getText()));
+            motorDTO.setQtdBloco_mot(Integer.parseInt(bloco_mot.getText()));
+            carroDTO.setId_car(Integer.parseInt(String.valueOf(jtl_Carro.getValueAt(
+                    jtl_Carro.getSelectedRow(), 0))));
+            
+            JOptionPane.showMessageDialog(null,
+                    motorCTR.alterarMotor(motorDTO, carroDTO)
+            );
+        }
+        catch(Exception e){
+            System.out.println("Erro ao Alterar" + e.getMessage());
+        }
+    }//Fecha método alterar()
+    
+    
+    /**
+     * Método utilizado para excluir os dados do motor.
+     */
+    private void excluir(){
+       if(JOptionPane.showConfirmDialog(null, "Deseja Realmente excluir o Motor?","Aviso", 
+            JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION){
+            JOptionPane.showMessageDialog(null,
+                    motorCTR.excluirMotor(motorDTO)
+            );
+       }
+    }//Fecha método excluir()
+    
+    
+    
+    /**
+     * Método utilizado para liberar/bloquear os campos da tela.
+     * @param a, boolean com true(libera) false(bloqueia).
+     */
+    private void liberaCampos(boolean a){
+        potencia_mot.setEnabled(a);
+        bloco_mot.setEnabled(a);
+        btnPesquisar1.setEnabled(a);
+        carro_mot.setEnabled(a);
+        jtl_Carro.setEnabled(a);
+    }//Fecha método liberaCampos(boolean a)
+    
+    
+    /**
+     * Método utilizado para liberar os botões da tela.
+     * @param a, boolean com true(libera) false(bloqueia) para o btnNovo.
+     * @param b, boolean com true(libera) false(bloqueia) para o btnSalvar.
+     * @param c, boolean com true(libera) false(bloqueia) para o btnCancelar.
+     * @param d, boolean com true(libera) false(bloqueia) para o btnExcluir.
+     * @param e, boolean com true(libera) false(bloqueia) para o btnSair.
+     */
+    private void liberaBotoes(boolean a, boolean b, boolean c, boolean d, boolean e){
+        btnNovo.setEnabled(a);
+        btnSalvar.setEnabled(b);
+        btnCancelar.setEnabled(c);
+        btnExcluir.setEnabled(d);
+        btnSair.setEnabled(e);
+    }//Fecha método liberaBotoes(boolean a, boolean b, boolean c, boolean d, boolean e)
+    
+    
+    /**
+     * Método utilizado para limpar os campos da tela.
+     */
+    private void limpaCampos(){
+        potencia_mot.setText("");
+        bloco_mot.setText("");
+        carro_mot.setText("");
+        modelo_jtl_consultar_carro.setNumRows(0);
+    }//Fecha método limpaCampos()
+    
+    
+    /**
+     * Método utilizado para preencher/contruir a Jtable.
+     * @param nome_mot, String com o nome do motor
+     */
+    private void preencheTabelaMotor(String nome_mot){
+        try{
+            //Limpa todas as linhas
+            modelo_jtl_consultar_motor.setNumRows(0);
+            //Enquanto tiver linhas - faça
+            motorDTO.setPotencia_mot(Integer.parseInt(nome_mot));
+            rs = motorCTR.consultarMotor(motorDTO, 1); //1 = é a pesquisa por nome na classe DAO
+            while(rs.next()){
+                modelo_jtl_consultar_motor.addRow(new Object[]{
+                  rs.getString("id_mot"),
+                  rs.getString("potencia_mot"),
+                });
+            }        
+        }
+        catch(Exception erTab){
+            System.out.println("Erro SQL: "+erTab);
+        } 
+        finally{
+            motorCTR.CloseDB();
+        }
+    }//Fecha método preencheTabelaMotor(String nome_mot)
+    
+    /**
+     * Método utilizado para preencher os campos da tela com 
+     * valores do motor.
+     * @param id_mot, int com o id do motor.
+     */
+    private void preencheCamposMotor(int id_mot){
+        try{
+            motorDTO.setId_mot(id_mot);
+            rs = motorCTR.consultarMotor(motorDTO, 2); //2 = é a pesquisa no id na classe DAO
+            if(rs.next()){
+                limpaCampos();
+                
+                potencia_mot.setText(rs.getString("potencia_mot"));
+                bloco_mot.setText(rs.getString("qtdbloco_mot"));
+                /////Colocando os dados do carro
+                modelo_jtl_consultar_carro.setNumRows(0);
+                modelo_jtl_consultar_carro.addRow(new Object[]{rs.getInt("id_car"), rs.getString("modelo_car"),});
+                jtl_Carro.setRowSelectionInterval(0, 0);
+                
+                gravar_alterar = 2;
+                liberaCampos(true);
+            }//fecha if(rs.next)
+        }//fecha try
+        catch(Exception erTab){
+            System.out.println("Erro SQL: "+erTab);
+        }  
+        finally{
+            motorCTR.CloseDB();
+        }
+    }//Fecha método preencheCamposMotor(int id_car)
+    
+    
+    /**
+     * Método utilizado para preencher/contruir a Jtable.
+     * @param nome_car, String com o nome do carro
+     */
+    private void preencheTabelaCarro(String nome_car){
+        try{
+            //Limpa todas as linhas
+            modelo_jtl_consultar_carro.setNumRows(0);
+            //Enquanto tiver linhas - faça
+            carroDTO.setModelo_car(nome_car);
+            rs = carroCTR.consultarCarro(carroDTO, 1); //1 = é a pesquisa por nome na classe DAO
+            while(rs.next()){
+                modelo_jtl_consultar_carro.addRow(new Object[]{
+                  rs.getString("id_car"),
+                  rs.getString("modelo_car"),
+                });
+            }        
+        }
+        catch(Exception erTab){
+            System.out.println("Erro SQL: "+erTab);
+        } 
+        finally{
+            motorCTR.CloseDB();
+        }
+    }//Fecha método preencheTabelaCarro(String nome_car)
+
+    
+    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField bloco_mot;
@@ -399,7 +643,7 @@ public class MotorVIEW extends javax.swing.JInternalFrame {
     private javax.swing.JButton btnPesquisar1;
     private javax.swing.JButton btnSair;
     private javax.swing.JButton btnSalvar;
-    private javax.swing.JTextField dono_mot;
+    private javax.swing.JTextField carro_mot;
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
@@ -414,7 +658,7 @@ public class MotorVIEW extends javax.swing.JInternalFrame {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTable jtl_Carro;
-    private javax.swing.JTable jtl_motor;
+    private javax.swing.JTable jtl_Motor;
     private javax.swing.JTextField pesquisa_nome_mot;
     private javax.swing.JTextField potencia_mot;
     // End of variables declaration//GEN-END:variables
