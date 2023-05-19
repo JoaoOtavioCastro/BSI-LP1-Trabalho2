@@ -1,0 +1,40 @@
+CREATE TABLE dono(
+nome_don varchar(100),
+cpf_don varchar(20),
+id_don serial,
+email_don varchar(100),
+tel_don varchar(20),
+CONSTRAINT pkdono PRIMARY KEY (id_don)
+);
+CREATE TABLE carro(
+id_car serial,
+modelo_car varchar(100),
+ano_car varchar(4),
+marca_car varchar(30),
+id_don int,
+CONSTRAINT pkcarro PRIMARY KEY (id_car),
+CONSTRAINT fkdono FOREIGN KEY (id_don) REFERENCES dono(id_don) 
+);
+CREATE TABLE motor(
+id_mot serial,
+qtdbloco_mot int,
+potencia_mot int,
+id_car int,
+CONSTRAINT pkmotor PRIMARY KEY (id_mot),
+CONSTRAINT fkcar FOREIGN KEY (id_car) REFERENCES carro(id_car)
+);
+CREATE TABLE mecanico(
+id_mec serial,
+nome_mec varchar(100),
+cpf_mec varchar(20),
+tel_mec varchar(20),
+CONSTRAINT pkmecanico PRIMARY KEY (id_mec)
+);
+CREATE TABLE conserto(
+id_mec int,
+id_mot int,
+valor double precision,
+datac varchar(10),
+CONSTRAINT fkmecanico FOREIGN KEY (id_mec) REFERENCES mecanico(id_mec),
+CONSTRAINT fkmotor FOREIGN KEY (id_mot) REFERENCES motor(id_mot)
+);
