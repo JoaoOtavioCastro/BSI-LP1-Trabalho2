@@ -8,6 +8,7 @@ import javax.swing.JOptionPane;
 import java.awt.Image;
 import java.awt.Graphics;
 import javax.swing.ImageIcon;
+
 /**
  *
  * @author jotavio
@@ -32,6 +33,7 @@ public class PrincipalView extends javax.swing.JFrame {
     private void initComponents() {
 
         desktopPane = new javax.swing.JDesktopPane();
+        jLabel1 = new javax.swing.JLabel();
         menuBar = new javax.swing.JMenuBar();
         fileMenu = new javax.swing.JMenu();
         itemMFazenda = new javax.swing.JMenuItem();
@@ -44,6 +46,11 @@ public class PrincipalView extends javax.swing.JFrame {
         Menu_Exit = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/com/agro/view/imagens/agro_tela.jpeg"))); // NOI18N
+        jLabel1.setText(".");
+        desktopPane.add(jLabel1);
+        jLabel1.setBounds(-20, -10, 1240, 740);
 
         fileMenu.setMnemonic('f');
         fileMenu.setText("Cadastro");
@@ -118,18 +125,20 @@ public class PrincipalView extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(desktopPane, javax.swing.GroupLayout.DEFAULT_SIZE, 1225, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(desktopPane, javax.swing.GroupLayout.DEFAULT_SIZE, 1213, Short.MAX_VALUE)
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(desktopPane, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 829, Short.MAX_VALUE)
+            .addComponent(desktopPane, javax.swing.GroupLayout.PREFERRED_SIZE, 709, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void itemMProdutoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemMProdutoActionPerformed
-        
+        abreProdutoVIEW();
     }//GEN-LAST:event_itemMProdutoActionPerformed
 
     private void Menu_ExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Menu_ExitActionPerformed
@@ -145,7 +154,7 @@ public class PrincipalView extends javax.swing.JFrame {
     }//GEN-LAST:event_itemMFornecedorMouseClicked
 
     private void itemMProprietarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemMProprietarioActionPerformed
-       abreProprietarioVIEW();
+        abreProprietarioVIEW();
     }//GEN-LAST:event_itemMProprietarioActionPerformed
 
     private void Menu_ExitMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_Menu_ExitMouseClicked
@@ -186,23 +195,33 @@ public class PrincipalView extends javax.swing.JFrame {
             }
         });
     }
-    private void sair(){
-        Object[] options = { "Sair", "Cancelar" };
-        if(JOptionPane.showOptionDialog(null, "Deseja Sair do Sistema", "Informação", 
-                JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null, options, options[0]) == 0){
+
+    private void sair() {
+        Object[] options = {"Sair", "Cancelar"};
+        if (JOptionPane.showOptionDialog(null, "Deseja Sair do Sistema", "Informação",
+                JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null, options, options[0]) == 0) {
             System.exit(0);
-        } 
-    } 
- private void abreFornecedorVIEW(){
+        }
+    }
+
+    private void abreFornecedorVIEW() {
         FornecedorVIEW fornecedorVIEW = new FornecedorVIEW();
         this.desktopPane.add(fornecedorVIEW);
-        fornecedorVIEW.setVisible(true); 
+        fornecedorVIEW.setVisible(true);
         fornecedorVIEW.setPosicao();
     }
- private void abreProprietarioVIEW(){
+
+    private void abreProdutoVIEW() {
+        ProdutoVIEW produtoVIEW = new ProdutoVIEW();
+        this.desktopPane.add(produtoVIEW);
+        produtoVIEW.setVisible(true);
+        produtoVIEW.setPosicao();
+    }
+
+    private void abreProprietarioVIEW() {
         ProprietarioVIEW proprietarioVIEW = new ProprietarioVIEW();
         this.desktopPane.add(proprietarioVIEW);
-        proprietarioVIEW.setVisible(true); 
+        proprietarioVIEW.setVisible(true);
         proprietarioVIEW.setPosicao();
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -216,6 +235,7 @@ public class PrincipalView extends javax.swing.JFrame {
     private javax.swing.JMenuItem itemMProduto;
     private javax.swing.JMenuItem itemMProprietario;
     private javax.swing.JMenuItem itemMTratamento;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JMenuBar menuBar;
     // End of variables declaration//GEN-END:variables
 

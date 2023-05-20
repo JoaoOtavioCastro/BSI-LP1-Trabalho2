@@ -6,7 +6,9 @@
 package br.com.agro.view;
 
 import br.com.agro.ctr.FornecedorCTR;
+import br.com.agro.ctr.ProdutoCTR;
 import br.com.agro.dto.FornecedorDTO;
+import br.com.agro.dto.ProdutoDTO;
 import java.awt.Dimension;
 import java.sql.ResultSet;
 import javax.swing.JOptionPane;
@@ -18,10 +20,14 @@ import javax.swing.table.DefaultTableModel;
  */
 public class ProdutoVIEW extends javax.swing.JInternalFrame {
 
+    ProdutoDTO pdto = new ProdutoDTO();
+    ProdutoCTR pctr = new ProdutoCTR();
     FornecedorDTO fdto = new FornecedorDTO();
     FornecedorCTR fctr = new FornecedorCTR();
+
     int gravar_alterar;
     ResultSet rs = null;
+    DefaultTableModel modelo_jtlConsultarProduto;
     DefaultTableModel modelo_jtlConsultarFornecedor;
 
     public void setPosicao() {
@@ -30,15 +36,15 @@ public class ProdutoVIEW extends javax.swing.JInternalFrame {
     }
 
     /**
-     * Creates new form FornecedorVIEW
+     * Creates new form ProdutoVIEW
      */
     public ProdutoVIEW() {
         initComponents();
         liberaCampos(false);
         liberaBotoes(true, false, false, false);
-        modelo_jtlConsultarFornecedor = (DefaultTableModel) jtlConsultaProduto.getModel();
-                preencheTabela();
-
+        modelo_jtlConsultarProduto = (DefaultTableModel) jtlConsultaProduto.getModel();
+        modelo_jtlConsultarFornecedor = (DefaultTableModel) jtlConsultaFornecedor1.getModel();
+        preencheTabela();
     }
 
     /**
@@ -87,7 +93,7 @@ public class ProdutoVIEW extends javax.swing.JInternalFrame {
 
         jLabel3.setText("tipo:");
 
-        cbTipo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cbTipo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Pesticida", "Adubo" }));
 
         jLabel6.setText("Descrição:");
 
@@ -101,25 +107,27 @@ public class ProdutoVIEW extends javax.swing.JInternalFrame {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addGroup(jPanel1Layout.createSequentialGroup()
-                            .addComponent(jLabel1)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(txtNome, javax.swing.GroupLayout.PREFERRED_SIZE, 268, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGroup(jPanel1Layout.createSequentialGroup()
-                            .addComponent(jLabel2)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(txtPreco)))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel6)
-                            .addComponent(jLabel3))
+                        .addComponent(jLabel6)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(cbTipo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(jScrollPane3))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(jLabel1)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(txtNome, javax.swing.GroupLayout.PREFERRED_SIZE, 268, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel2)
+                                    .addComponent(jLabel3))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(cbTipo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(txtPreco))))
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -138,9 +146,11 @@ public class ProdutoVIEW extends javax.swing.JInternalFrame {
                     .addComponent(cbTipo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel6)
-                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel6)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 106, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Consulta", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Dialog", 1, 11))); // NOI18N
@@ -150,6 +160,12 @@ public class ProdutoVIEW extends javax.swing.JInternalFrame {
         txtConsulta.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 txtConsultaKeyPressed(evt);
+            }
+        });
+
+        jScrollPane1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jScrollPane1MouseClicked(evt);
             }
         });
 
@@ -313,11 +329,6 @@ public class ProdutoVIEW extends javax.swing.JInternalFrame {
                 return canEdit [columnIndex];
             }
         });
-        jtlConsultaFornecedor1.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jtlConsultaFornecedor1MouseClicked(evt);
-            }
-        });
         jScrollPane2.setViewportView(jtlConsultaFornecedor1);
         if (jtlConsultaFornecedor1.getColumnModel().getColumnCount() > 0) {
             jtlConsultaFornecedor1.getColumnModel().getColumn(0).setResizable(false);
@@ -384,11 +395,11 @@ public class ProdutoVIEW extends javax.swing.JInternalFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -439,6 +450,7 @@ public class ProdutoVIEW extends javax.swing.JInternalFrame {
     private void jtlConsultaProdutoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jtlConsultaProdutoMouseClicked
         preencheCampos(Integer.parseInt(String.valueOf(jtlConsultaProduto.getValueAt(jtlConsultaProduto.getSelectedRow(), 0))));
         liberaBotoes(false, true, true, true);
+
     }//GEN-LAST:event_jtlConsultaProdutoMouseClicked
 
     private void btnExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExcluirActionPerformed
@@ -453,25 +465,25 @@ public class ProdutoVIEW extends javax.swing.JInternalFrame {
         limpaCampos();
         liberaCampos(false);
         liberaBotoes(true, false, false, false);
-        gravar_alterar=0;
+        gravar_alterar = 0;
     }//GEN-LAST:event_btnCancelarActionPerformed
 
     private void txtFornecedorKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtFornecedorKeyPressed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtFornecedorKeyPressed
 
-    private void jtlConsultaFornecedor1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jtlConsultaFornecedor1MouseClicked
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jtlConsultaFornecedor1MouseClicked
-
     private void btnFornecedorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFornecedorActionPerformed
-        // TODO add your handling code here:
+        preencheTabelaFornecedor(txtFornecedor.getText());
     }//GEN-LAST:event_btnFornecedorActionPerformed
+
+    private void jScrollPane1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jScrollPane1MouseClicked
+
+    }//GEN-LAST:event_jScrollPane1MouseClicked
 
     private void gravar() {
         try {
             pegaValores();
-            JOptionPane.showMessageDialog(null, fctr.inserirFornecedor(fdto));
+            JOptionPane.showMessageDialog(null, pctr.inserirProduto(pdto, fdto));
         } catch (Exception e) {
             System.out.println("Erro: " + e.getMessage());
         }
@@ -480,7 +492,9 @@ public class ProdutoVIEW extends javax.swing.JInternalFrame {
     private void alterar() {
         try {
             pegaValores();
-            JOptionPane.showMessageDialog(null, fctr.alterarFornecedor(fdto));
+            System.out.println("passou1");
+
+            JOptionPane.showMessageDialog(null, pctr.alterarProduto(pdto, fdto));
         } catch (Exception e) {
             System.out.println("Erro: " + e.getMessage());
         }
@@ -488,9 +502,9 @@ public class ProdutoVIEW extends javax.swing.JInternalFrame {
 
     private void excluir() {
         try {
-            if (JOptionPane.showConfirmDialog(null, "Deseja Realmente excluir o Fornecedor?",
+            if (JOptionPane.showConfirmDialog(null, "Deseja Realmente excluir o Produto?",
                     "Aviso", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
-                JOptionPane.showMessageDialog(null, fctr.excluirFornecedor(fdto));
+                JOptionPane.showMessageDialog(null, pctr.excluirProduto(pdto));
             }
         } catch (Exception e) {
             System.out.println("Erro: " + e.getMessage());
@@ -499,8 +513,11 @@ public class ProdutoVIEW extends javax.swing.JInternalFrame {
 
     private void liberaCampos(boolean a) {
         txtNome.setEnabled(a);
-        txtTelefone.setEnabled(a);
+        txtFornecedor.setEnabled(a);
         txtPreco.setEnabled(a);
+        txtDesc.setEnabled(a);
+        jtlConsultaFornecedor1.setEnabled(a);
+        cbTipo.setEnabled(a);
     }
 
     private void liberaBotoes(boolean a, boolean b, boolean c, boolean d) {
@@ -513,50 +530,83 @@ public class ProdutoVIEW extends javax.swing.JInternalFrame {
     private void limpaCampos() {
         txtNome.setText("");
         txtPreco.setText("");
-        txtTelefone.setText("");
+        txtFornecedor.setText("");
+        txtDesc.setText("");
+        cbTipo.setSelectedIndex(0);
+        modelo_jtlConsultarFornecedor.setNumRows(0);
     }
 
     private void preencheTabela() {
         try {
-            modelo_jtlConsultarFornecedor.setNumRows(0);
-            fdto.setNome_for(txtConsulta.getText());
-            rs = fctr.consultarFornecedor(fdto, 1);
+            modelo_jtlConsultarProduto.setNumRows(0);
+            pdto.setNome_pro(txtConsulta.getText());
+            rs = pctr.consultarProduto(pdto, 1);
             while (rs.next()) {
-                modelo_jtlConsultarFornecedor.addRow(new Object[]{
-                    rs.getString("id_for"),
-                    rs.getString("nome_for"),});
+                modelo_jtlConsultarProduto.addRow(new Object[]{
+                    rs.getString("id_pro"),
+                    rs.getString("nome_pro"),});
             }
         } catch (Exception e) {
             System.out.println("Erro: " + e.getMessage());
         } finally {
-            fctr.CloseDB();
+            pctr.CloseDB();
         }
 
     }
 
     private void preencheCampos(int id_for) {
         try {
-            fdto.setId_for(id_for);
-            rs = fctr.consultarFornecedor(fdto, 2);
+            pdto.setId_pro(id_for);
+
+            rs = pctr.consultarProduto(pdto, 2);
+
             if (rs.next()) {
                 limpaCampos();
-                txtNome.setText(rs.getString("nome_for"));
-                txtPreco.setText(rs.getString("cnpj_for"));
-                txtTelefone.setText(rs.getString("tel_for"));
+
+                txtNome.setText(rs.getString("nome_pro"));
+                txtPreco.setText(rs.getString("preco_pro"));
+                txtDesc.setText(rs.getString("desc_pro"));
+                cbTipo.setSelectedIndex(rs.getInt("tipo_pro"));
+                fdto.setId_for(rs.getInt("id_for"));
+                modelo_jtlConsultarFornecedor.setNumRows(0);
+                modelo_jtlConsultarFornecedor.addRow(new Object[]{
+                    rs.getString("id_for"),
+                    rs.getString("nome_for"),});
                 gravar_alterar = 2;
                 liberaCampos(true);
             }
         } catch (Exception e) {
             System.out.println("Erro: " + e.getMessage());
         } finally {
-            fctr.CloseDB();
+            pctr.CloseDB();
         }
     }
 
     private void pegaValores() {
-        fdto.setNome_for(txtNome.getText());
-        fdto.setTel_for(txtTelefone.getText());
-        fdto.setCnpj_for(txtPreco.getText());
+        pdto.setNome_pro(txtNome.getText());
+        pdto.setPreco_pro(Double.parseDouble(txtPreco.getText()));
+        pdto.setDesc_pro(txtDesc.getText());
+        pdto.setTipo_pro(cbTipo.getSelectedIndex());
+        if (gravar_alterar == 1) {
+            fdto.setId_for(Integer.parseInt(String.valueOf(jtlConsultaFornecedor1.getValueAt(jtlConsultaFornecedor1.getSelectedRow(), 0))));
+        }
+    }
+
+    private void preencheTabelaFornecedor(String nome_for) {
+        try {
+            modelo_jtlConsultarFornecedor.setNumRows(0);
+            fdto.setNome_for(nome_for);
+            rs = fctr.consultarFornecedor(fdto, 1);
+            while (rs.next()) {
+                modelo_jtlConsultarFornecedor.addRow(new Object[]{
+                    rs.getString("id_for"),
+                    rs.getString("nome_for"),});
+            }
+        } catch (Exception erTab) {
+            System.out.println("Erro SQL: " + erTab);
+        } finally {
+            pctr.CloseDB();
+        }
     }
 
 
@@ -570,52 +620,24 @@ public class ProdutoVIEW extends javax.swing.JInternalFrame {
     private javax.swing.JButton btnSalvar;
     private javax.swing.JComboBox<String> cbTipo;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel10;
-    private javax.swing.JLabel jLabel11;
-    private javax.swing.JLabel jLabel12;
-    private javax.swing.JLabel jLabel13;
-    private javax.swing.JLabel jLabel14;
-    private javax.swing.JLabel jLabel15;
-    private javax.swing.JLabel jLabel16;
-    private javax.swing.JLabel jLabel17;
-    private javax.swing.JLabel jLabel18;
-    private javax.swing.JLabel jLabel19;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel8;
-    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
-    private javax.swing.JPanel jPanel5;
-    private javax.swing.JPanel jPanel6;
-    private javax.swing.JPanel jPanel7;
-    private javax.swing.JPanel jPanel8;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JTable jtlConsultaFornecedor1;
     private javax.swing.JTable jtlConsultaProduto;
-    private javax.swing.JTextField txtCnpj2;
-    private javax.swing.JTextField txtCnpj3;
-    private javax.swing.JTextField txtCnpj4;
-    private javax.swing.JTextField txtCnpj5;
     private javax.swing.JTextField txtConsulta;
     private javax.swing.JTextArea txtDesc;
     private javax.swing.JTextField txtFornecedor;
     private javax.swing.JTextField txtNome;
-    private javax.swing.JTextField txtNome2;
-    private javax.swing.JTextField txtNome3;
-    private javax.swing.JTextField txtNome4;
-    private javax.swing.JTextField txtNome5;
     private javax.swing.JTextField txtPreco;
-    private javax.swing.JTextField txtTelefone2;
-    private javax.swing.JTextField txtTelefone3;
-    private javax.swing.JTextField txtTelefone4;
-    private javax.swing.JTextField txtTelefone5;
     // End of variables declaration//GEN-END:variables
 }
