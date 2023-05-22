@@ -57,6 +57,11 @@ public class PrincipalView extends javax.swing.JFrame {
 
         itemMFazenda.setMnemonic('o');
         itemMFazenda.setText("Fazenda");
+        itemMFazenda.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                itemMFazendaActionPerformed(evt);
+            }
+        });
         fileMenu.add(itemMFazenda);
 
         itemMFornecedor.setMnemonic('s');
@@ -75,6 +80,11 @@ public class PrincipalView extends javax.swing.JFrame {
 
         itemMPlantacao.setMnemonic('a');
         itemMPlantacao.setText("Plantação");
+        itemMPlantacao.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                itemMPlantacaoActionPerformed(evt);
+            }
+        });
         fileMenu.add(itemMPlantacao);
 
         itemMProduto.setMnemonic('x');
@@ -161,6 +171,14 @@ public class PrincipalView extends javax.swing.JFrame {
         sair();
     }//GEN-LAST:event_Menu_ExitMouseClicked
 
+    private void itemMFazendaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemMFazendaActionPerformed
+        abreFazendaVIEW();
+    }//GEN-LAST:event_itemMFazendaActionPerformed
+
+    private void itemMPlantacaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemMPlantacaoActionPerformed
+        abrePlantacaoVIEW();
+    }//GEN-LAST:event_itemMPlantacaoActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -211,11 +229,25 @@ public class PrincipalView extends javax.swing.JFrame {
         fornecedorVIEW.setPosicao();
     }
 
+    private void abreFazendaVIEW() {
+        FazendaVIEW fazendaVIEW = new FazendaVIEW();
+        this.desktopPane.add(fazendaVIEW);
+        fazendaVIEW.setVisible(true);
+        fazendaVIEW.setPosicao();
+    }
+
     private void abreProdutoVIEW() {
         ProdutoVIEW produtoVIEW = new ProdutoVIEW();
         this.desktopPane.add(produtoVIEW);
         produtoVIEW.setVisible(true);
         produtoVIEW.setPosicao();
+    }
+
+    private void abrePlantacaoVIEW() {
+        PlantacaoVIEW plantacaoVIEW = new PlantacaoVIEW();
+        this.desktopPane.add(plantacaoVIEW);
+        plantacaoVIEW.setVisible(true);
+        plantacaoVIEW.setPosicao();
     }
 
     private void abreProprietarioVIEW() {

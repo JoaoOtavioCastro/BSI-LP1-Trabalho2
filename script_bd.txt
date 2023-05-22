@@ -1,6 +1,6 @@
 create table proprietario(
 nome_ppt varchar(100),
-dtanasc_ppt date, 
+dtanasc_ppt varchar(10), 
 id_ppt serial,
 tel_ppt varchar(20),
 cnpj_ppt varchar(20) unique,
@@ -36,23 +36,19 @@ constraint pk_pro primary key (id_pro)
 );
 create table plantacao(
 id_pla serial,
-p_colheita_pla date,
-p_venda_pla double precision,
+colheita_pla varchar(10),
 ph_pla integer,
 area_pla double precision,
-loc_pla varchar(20),
-dta_pla date,
 cultivo_pla varchar(60),
 id_faz integer,
 constraint fk_faz foreign key (id_faz) references fazenda (id_faz),
-constraint dta_cul_loc_faz_pla unique (dta_pla, loc_pla, cultivo_pla, id_faz),
+constraint dta_cul_loc_faz_pla unique (dta_pla, cultivo_pla, id_faz),
 constraint pk_pla primary key (id_pla)
 );
 create table aplicacao(
 id_apl serial,
 dta_apl date,
 val_apli double precision,
-tempo_apl varchar (20),
 id_pla integer,
 constraint fk_pla foreign key (id_pla) references plantacao (id_pla),
 constraint pk_apl primary key (id_apl)

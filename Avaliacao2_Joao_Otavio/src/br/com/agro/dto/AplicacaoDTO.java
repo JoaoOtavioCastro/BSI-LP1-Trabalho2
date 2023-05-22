@@ -13,7 +13,6 @@ import java.util.Date;
 public class AplicacaoDTO {
     int id_pla, id_apl;
     Date dta_apl;
-    String tempo_apl;
     double valor_apl;
 
     public int getId_pla() {
@@ -38,14 +37,6 @@ public class AplicacaoDTO {
 
     public void setDta_apl(Date dta_apl) {
         this.dta_apl = dta_apl;
-    }
-
-    public String getTempo_apl() {
-        return tempo_apl;
-    }
-
-    public void setTempo_apl(String tempo_apl) {
-        this.tempo_apl = tempo_apl;
     }
 
     public double getValor_apl() {

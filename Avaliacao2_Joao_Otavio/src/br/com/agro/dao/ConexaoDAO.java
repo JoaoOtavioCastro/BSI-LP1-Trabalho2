@@ -5,12 +5,6 @@ package br.com.agro.dao;
  */
 import java.sql.*;
 
-/**
- * Essa classe contém os métodos para abrir e fechar o banco de dados
- * Disciplina de LP1S3 - BSI
- *
- * @author Andre Luis Gobbi Primo/Ivan Oliveira Lopes
- */
 public class ConexaoDAO {
 
     //Criando um atributo do tipo Connection que servira para guardar a conexao 
