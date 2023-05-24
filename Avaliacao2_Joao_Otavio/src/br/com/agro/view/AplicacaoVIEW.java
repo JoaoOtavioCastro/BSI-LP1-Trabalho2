@@ -81,7 +81,7 @@ public class AplicacaoVIEW extends javax.swing.JInternalFrame {
     
     private void gravar(){
         aplicacaoDTO.setDta_apl(new Date());
-        aplicacaoDTO.setVal_apl(Double.parseDouble(total_aplicacaos.getText()));
+        aplicacaoDTO.setValor_apl(Double.parseDouble(total_aplicacao.getText()));
         plantacaoDTO.setId_pla(Integer.parseInt(String.valueOf(jtl_consultar_pla.getValueAt(
                 jtl_consultar_pla.getSelectedRow(), 0))));
         
@@ -117,7 +117,7 @@ public class AplicacaoVIEW extends javax.swing.JInternalFrame {
                 total += (Double.parseDouble(String.valueOf(jtl_consultar_pro_selecionado.getValueAt(cont, 2))) * 
                         (Integer.parseInt(String.valueOf(jtl_consultar_pro_selecionado.getValueAt(cont, 3)))));
             }
-            total_aplicacaos.setText(String.valueOf(total));
+            total_aplicacao.setText(String.valueOf(total));
         } catch (Exception e) {
             System.out.println("Erro SQL: " + e.getMessage());
         }
@@ -141,7 +141,7 @@ public class AplicacaoVIEW extends javax.swing.JInternalFrame {
         btnProAdd.setEnabled(a);
         btnProRem.setEnabled(a);
         jtl_consultar_pro_selecionado.setEnabled(a);
-        total_aplicacaos.setText("0.00");
+        total_aplicacao.setText("0.00");
     }
     
     private void liberaBotoes(boolean a, boolean b, boolean c, boolean d){
@@ -197,7 +197,7 @@ public class AplicacaoVIEW extends javax.swing.JInternalFrame {
         cliente = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
         vendas = new javax.swing.JLabel();
-        total_vendas = new javax.swing.JLabel();
+        total_aplicacao = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         jtl_consultar_pro = new javax.swing.JTable();
@@ -296,10 +296,10 @@ public class AplicacaoVIEW extends javax.swing.JInternalFrame {
         vendas.setText("TOTAL DE VENDAS: ");
         jPanel2.add(vendas, new org.netbeans.lib.awtextra.AbsoluteConstraints(6, 18, 214, 64));
 
-        total_vendas.setFont(new java.awt.Font("Segoe UI", 1, 20)); // NOI18N
-        total_vendas.setForeground(new java.awt.Color(0, 204, 51));
-        total_vendas.setText("0.00");
-        jPanel2.add(total_vendas, new org.netbeans.lib.awtextra.AbsoluteConstraints(226, 18, 128, 64));
+        total_aplicacao.setFont(new java.awt.Font("Segoe UI", 1, 20)); // NOI18N
+        total_aplicacao.setForeground(new java.awt.Color(0, 204, 51));
+        total_aplicacao.setText("0.00");
+        jPanel2.add(total_aplicacao, new org.netbeans.lib.awtextra.AbsoluteConstraints(226, 18, 128, 64));
 
         jPanel3.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
@@ -517,7 +517,7 @@ public class AplicacaoVIEW extends javax.swing.JInternalFrame {
     private javax.swing.JTable jtl_consultar_pro_selecionado;
     private javax.swing.JTextField pesquisa_nome_pla;
     private javax.swing.JTextField pesquisa_nome_pro;
-    private javax.swing.JLabel total_vendas;
+    private javax.swing.JLabel total_aplicacao;
     private javax.swing.JLabel vendas;
     // End of variables declaration//GEN-END:variables
 }

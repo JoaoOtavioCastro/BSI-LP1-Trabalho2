@@ -63,11 +63,14 @@
             <Property name="text" type="java.lang.String" value="Realiza&#xe7;&#xe3;o"/>
           </Properties>
           <SubComponents>
-            <MenuItem class="javax.swing.JMenuItem" name="itemMTratamento">
+            <MenuItem class="javax.swing.JMenuItem" name="itemMAplicacao">
               <Properties>
                 <Property name="mnemonic" type="int" value="116"/>
-                <Property name="text" type="java.lang.String" value="Tratamento"/>
+                <Property name="text" type="java.lang.String" value="Aplica&#xe7;&#xe3;o"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="itemMAplicacaoActionPerformed"/>
+              </Events>
             </MenuItem>
           </SubComponents>
         </Menu>

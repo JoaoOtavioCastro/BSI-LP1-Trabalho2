@@ -42,7 +42,7 @@ public class PrincipalView extends javax.swing.JFrame {
         itemMProduto = new javax.swing.JMenuItem();
         itemMProprietario = new javax.swing.JMenuItem();
         editMenu = new javax.swing.JMenu();
-        itemMTratamento = new javax.swing.JMenuItem();
+        itemMAplicacao = new javax.swing.JMenuItem();
         Menu_Exit = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -109,9 +109,14 @@ public class PrincipalView extends javax.swing.JFrame {
         editMenu.setMnemonic('e');
         editMenu.setText("Realização");
 
-        itemMTratamento.setMnemonic('t');
-        itemMTratamento.setText("Tratamento");
-        editMenu.add(itemMTratamento);
+        itemMAplicacao.setMnemonic('t');
+        itemMAplicacao.setText("Aplicação");
+        itemMAplicacao.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                itemMAplicacaoActionPerformed(evt);
+            }
+        });
+        editMenu.add(itemMAplicacao);
 
         menuBar.add(editMenu);
 
@@ -178,6 +183,10 @@ public class PrincipalView extends javax.swing.JFrame {
     private void itemMPlantacaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemMPlantacaoActionPerformed
         abrePlantacaoVIEW();
     }//GEN-LAST:event_itemMPlantacaoActionPerformed
+
+    private void itemMAplicacaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemMAplicacaoActionPerformed
+        abreAplicacaoVIEW();
+    }//GEN-LAST:event_itemMAplicacaoActionPerformed
 
     /**
      * @param args the command line arguments
@@ -256,17 +265,24 @@ public class PrincipalView extends javax.swing.JFrame {
         proprietarioVIEW.setVisible(true);
         proprietarioVIEW.setPosicao();
     }
+
+    private void abreAplicacaoVIEW() {
+        AplicacaoVIEW aplicacaoVIEW = new AplicacaoVIEW();
+        this.desktopPane.add(aplicacaoVIEW);
+        aplicacaoVIEW.setVisible(true);
+        aplicacaoVIEW.setPosicao();
+    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenu Menu_Exit;
     private javax.swing.JDesktopPane desktopPane;
     private javax.swing.JMenu editMenu;
     private javax.swing.JMenu fileMenu;
+    private javax.swing.JMenuItem itemMAplicacao;
     private javax.swing.JMenuItem itemMFazenda;
     private javax.swing.JMenuItem itemMFornecedor;
     private javax.swing.JMenuItem itemMPlantacao;
     private javax.swing.JMenuItem itemMProduto;
     private javax.swing.JMenuItem itemMProprietario;
-    private javax.swing.JMenuItem itemMTratamento;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JMenuBar menuBar;
     // End of variables declaration//GEN-END:variables
