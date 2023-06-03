@@ -20,7 +20,7 @@ public class PlantacaoDAO {
                     + "ph_pla, id_faz) values ( "
                     + "'" + plantacaoDTO.getCultivo_pla() + "', "
                     + "'" + plantacaoDTO.getP_colheita_pla() + "', "
-                    + plantacaoDTO.getArea_pla()+ ", "
+                    + plantacaoDTO.getArea_pla() + ", "
                     + plantacaoDTO.getPh_pla() + ", "
                     + fazendaDTO.getId_faz() + ") ";
 
@@ -97,8 +97,22 @@ public class PlantacaoDAO {
                             + "where p.id_faz = f.id_faz and "
                             + "p.id_pla = " + plantacaoDTO.getId_pla();
                     break;
-
             }
+            rs = stmt.executeQuery(comando);
+            return rs;
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return rs;
+        }
+    }
+    public ResultSet consultarPlantacao(FazendaDTO fazendaDTO) {
+        try {
+            ConexaoDAO.ConectDB();
+            stmt = ConexaoDAO.con.createStatement();
+            String comando = "Select p.*, f.nome_faz "
+                    + "from plantacao p inner join fazenda f on"
+                    + " p.id_faz = f.id_faz where f.nome_faz ilike '%" + fazendaDTO.getNome_faz()+"%'";
+            System.out.println(comando);
             rs = stmt.executeQuery(comando);
             return rs;
         } catch (Exception e) {

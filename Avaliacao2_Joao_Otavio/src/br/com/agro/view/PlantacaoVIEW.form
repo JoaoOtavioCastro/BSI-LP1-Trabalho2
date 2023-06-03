@@ -117,9 +117,9 @@
                       <Component id="txtArea" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace type="separate" max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="jLabel3" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="txtColheita" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="1" attributes="0">
+                      <Component id="jLabel3" min="-2" max="-2" attributes="0"/>
+                      <Component id="txtColheita" min="-2" pref="19" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
@@ -143,8 +143,14 @@
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="txtCultivo">
+          <Properties>
+            <Property name="toolTipText" type="java.lang.String" value="Informe qual a planta a ser cultivada"/>
+          </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="txtArea">
+          <Properties>
+            <Property name="toolTipText" type="java.lang.String" value="Informe a area onde se encontra a planta&#xe7;&#xe3;o"/>
+          </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel3">
           <Properties>
@@ -156,9 +162,18 @@
             <Property name="text" type="java.lang.String" value="PH recomendado:"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JTextField" name="txtColheita">
-        </Component>
         <Component class="javax.swing.JTextField" name="txtPh">
+          <Properties>
+            <Property name="toolTipText" type="java.lang.String" value="Informe o PH ideal para o solo"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JFormattedTextField" name="txtColheita">
+          <Properties>
+            <Property name="formatterFactory" type="javax.swing.JFormattedTextField$AbstractFormatterFactory" editor="org.netbeans.modules.form.editors.AbstractFormatterFactoryEditor" preCode="try {" postCode="} catch (java.text.ParseException ex) {&#xa;ex.printStackTrace();&#xa;}">
+              <Format format="##/##/####" subtype="-1" type="5"/>
+            </Property>
+            <Property name="toolTipText" type="java.lang.String" value="Informe a data em que se preve a colheita da planta&#xe7;&#xe3;o"/>
+          </Properties>
         </Component>
       </SubComponents>
     </Container>

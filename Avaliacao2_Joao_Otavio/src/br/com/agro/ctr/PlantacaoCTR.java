@@ -62,4 +62,10 @@ public class PlantacaoCTR {
         ConexaoDAO.CloseDB();
     }
 
+    public ResultSet consultarPlantacao(FazendaDTO fazendaDTO) {
+        ResultSet rs = null;
+        rs = plantacaoDAO.consultarPlantacao(fazendaDTO);
+        return rs;
+    }
+
 }

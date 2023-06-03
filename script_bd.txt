@@ -60,4 +60,19 @@ constraint fk_pro foreign key (id_pro) references produto (id_pro),
 constraint fk_apl foreign key (id_apl) references aplicacao (id_apl),
 val_pro double precision,
 qtd_pro integer
+);
+create table funcionario(
+	id_fun serial,
+	nome_fun varchar(30),
+	cpf_fun varchar(15) unique,
+	senha_fun varchar(50),
+	login varchar(15) unique,
+	tipo_fun bool,
+	constraint pk_fun primary key (id_fun)
+);
+insert into funcionario (nome_fun, cpf_fun, senha_fun, login, tipo_fun) values(
+'Joao Otavio', '123.123.123-12', '21232f297a57a5a743894a0e4a801fc3', 'jotavio', true
+);
+insert into funcionario (nome_fun, cpf_fun, senha_fun, login, tipo_fun) values(
+'Andre Gobbi', 'XXX.XXX.XXX-XX', 'e8d95a51f3af4a3b134bf6bb680a213a', 'gobbi', false
 )

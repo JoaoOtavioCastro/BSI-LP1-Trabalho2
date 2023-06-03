@@ -1,6 +1,7 @@
 /*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/MDIApplication.java to edit this template
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
  */
 package br.com.agro.view;
 
@@ -8,18 +9,17 @@ import javax.swing.JOptionPane;
 import java.awt.Image;
 import java.awt.Graphics;
 import javax.swing.ImageIcon;
-
 /**
  *
- * @author jotavio
+ * @author jotav
  */
-public class PrincipalView extends javax.swing.JFrame {
+public class PrincipalVIEW extends javax.swing.JFrame {
 
     /**
-     * Creates new form PrincipalView
+     * Creates new form PrincipalVIEW
      */
-    public PrincipalView() {
-        initComponents();
+    public PrincipalVIEW() {
+        initComponents();       
         this.setLocationRelativeTo(null);
     }
 
@@ -32,8 +32,13 @@ public class PrincipalView extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        desktopPane = new javax.swing.JDesktopPane();
-        jLabel1 = new javax.swing.JLabel();
+        ImageIcon imageicon = new ImageIcon(getClass().getResource("imagens/agro_tela.jpeg"));
+        Image image = imageicon.getImage();
+        desktopPane = new javax.swing.JDesktopPane(){
+            public void paintComponent(Graphics graphics){
+                graphics.drawImage(image, 0, 0, getWidth(), getHeight(), this);
+            }
+        };
         menuBar = new javax.swing.JMenuBar();
         fileMenu = new javax.swing.JMenu();
         itemMFazenda = new javax.swing.JMenuItem();
@@ -43,14 +48,9 @@ public class PrincipalView extends javax.swing.JFrame {
         itemMProprietario = new javax.swing.JMenuItem();
         editMenu = new javax.swing.JMenu();
         itemMAplicacao = new javax.swing.JMenuItem();
-        Menu_Exit = new javax.swing.JMenu();
+        menuSair = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-
-        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/com/agro/view/imagens/agro_tela.jpeg"))); // NOI18N
-        jLabel1.setText(".");
-        desktopPane.add(jLabel1);
-        jLabel1.setBounds(-20, -10, 1240, 740);
 
         fileMenu.setMnemonic('f');
         fileMenu.setText("Cadastro");
@@ -120,19 +120,14 @@ public class PrincipalView extends javax.swing.JFrame {
 
         menuBar.add(editMenu);
 
-        Menu_Exit.setMnemonic('h');
-        Menu_Exit.setText("Sair");
-        Menu_Exit.addMouseListener(new java.awt.event.MouseAdapter() {
+        menuSair.setMnemonic('s');
+        menuSair.setText("Sair");
+        menuSair.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                Menu_ExitMouseClicked(evt);
+                menuSairMouseClicked(evt);
             }
         });
-        Menu_Exit.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                Menu_ExitActionPerformed(evt);
-            }
-        });
-        menuBar.add(Menu_Exit);
+        menuBar.add(menuSair);
 
         setJMenuBar(menuBar);
 
@@ -140,53 +135,49 @@ public class PrincipalView extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(desktopPane, javax.swing.GroupLayout.DEFAULT_SIZE, 1213, Short.MAX_VALUE)
-                .addContainerGap())
+            .addComponent(desktopPane, javax.swing.GroupLayout.PREFERRED_SIZE, 986, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(desktopPane, javax.swing.GroupLayout.PREFERRED_SIZE, 709, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(desktopPane, javax.swing.GroupLayout.PREFERRED_SIZE, 577, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void itemMProdutoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemMProdutoActionPerformed
-        abreProdutoVIEW();
-    }//GEN-LAST:event_itemMProdutoActionPerformed
-
-    private void Menu_ExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Menu_ExitActionPerformed
+    private void menuSairMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_menuSairMouseClicked
         sair();
-    }//GEN-LAST:event_Menu_ExitActionPerformed
+    }//GEN-LAST:event_menuSairMouseClicked
 
-    private void itemMFornecedorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemMFornecedorActionPerformed
-        abreFornecedorVIEW();
-    }//GEN-LAST:event_itemMFornecedorActionPerformed
-
-    private void itemMFornecedorMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_itemMFornecedorMouseClicked
-        abreFornecedorVIEW();
-    }//GEN-LAST:event_itemMFornecedorMouseClicked
-
-    private void itemMProprietarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemMProprietarioActionPerformed
-        abreProprietarioVIEW();
-    }//GEN-LAST:event_itemMProprietarioActionPerformed
-
-    private void Menu_ExitMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_Menu_ExitMouseClicked
-        sair();
-    }//GEN-LAST:event_Menu_ExitMouseClicked
+    private void itemMAplicacaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemMAplicacaoActionPerformed
+        abreAplicacaoVIEW();
+    }//GEN-LAST:event_itemMAplicacaoActionPerformed
 
     private void itemMFazendaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemMFazendaActionPerformed
         abreFazendaVIEW();
     }//GEN-LAST:event_itemMFazendaActionPerformed
 
+    private void itemMFornecedorMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_itemMFornecedorMouseClicked
+        abreFornecedorVIEW();
+    }//GEN-LAST:event_itemMFornecedorMouseClicked
+
+    private void itemMFornecedorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemMFornecedorActionPerformed
+        abreFornecedorVIEW();
+    }//GEN-LAST:event_itemMFornecedorActionPerformed
+
     private void itemMPlantacaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemMPlantacaoActionPerformed
         abrePlantacaoVIEW();
     }//GEN-LAST:event_itemMPlantacaoActionPerformed
 
-    private void itemMAplicacaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemMAplicacaoActionPerformed
-        abreAplicacaoVIEW();
-    }//GEN-LAST:event_itemMAplicacaoActionPerformed
+    private void itemMProdutoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemMProdutoActionPerformed
+        abreProdutoVIEW();
+    }//GEN-LAST:event_itemMProdutoActionPerformed
+
+    private void itemMProprietarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemMProprietarioActionPerformed
+        abreProprietarioVIEW();
+    }//GEN-LAST:event_itemMProprietarioActionPerformed
 
     /**
      * @param args the command line arguments
@@ -205,25 +196,24 @@ public class PrincipalView extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(PrincipalView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(PrincipalVIEW.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(PrincipalView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(PrincipalVIEW.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(PrincipalView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(PrincipalVIEW.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(PrincipalView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(PrincipalVIEW.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new PrincipalView().setVisible(true);
+                new PrincipalVIEW().setVisible(true);
             }
         });
     }
-
-    private void sair() {
+ private void sair() {
         Object[] options = {"Sair", "Cancelar"};
         if (JOptionPane.showOptionDialog(null, "Deseja Sair do Sistema", "Informação",
                 JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null, options, options[0]) == 0) {
@@ -273,7 +263,6 @@ public class PrincipalView extends javax.swing.JFrame {
         aplicacaoVIEW.setPosicao();
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JMenu Menu_Exit;
     private javax.swing.JDesktopPane desktopPane;
     private javax.swing.JMenu editMenu;
     private javax.swing.JMenu fileMenu;
@@ -283,8 +272,8 @@ public class PrincipalView extends javax.swing.JFrame {
     private javax.swing.JMenuItem itemMPlantacao;
     private javax.swing.JMenuItem itemMProduto;
     private javax.swing.JMenuItem itemMProprietario;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JMenuBar menuBar;
+    private javax.swing.JMenu menuSair;
     // End of variables declaration//GEN-END:variables
 
 }

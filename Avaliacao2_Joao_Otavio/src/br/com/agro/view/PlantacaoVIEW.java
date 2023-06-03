@@ -63,8 +63,8 @@ public class PlantacaoVIEW extends javax.swing.JInternalFrame {
         txtArea = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
-        txtColheita = new javax.swing.JTextField();
         txtPh = new javax.swing.JTextField();
+        txtColheita = new javax.swing.JFormattedTextField();
         jPanel2 = new javax.swing.JPanel();
         jLabel4 = new javax.swing.JLabel();
         txtConsulta = new javax.swing.JTextField();
@@ -90,9 +90,22 @@ public class PlantacaoVIEW extends javax.swing.JInternalFrame {
 
         jLabel2.setText("Area:");
 
+        txtCultivo.setToolTipText("Informe qual a planta a ser cultivada");
+
+        txtArea.setToolTipText("Informe a area onde se encontra a plantação");
+
         jLabel3.setText("Previsao de Colheita:");
 
         jLabel6.setText("PH recomendado:");
+
+        txtPh.setToolTipText("Informe o PH ideal para o solo");
+
+        try {
+            txtColheita.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("##/##/####")));
+        } catch (java.text.ParseException ex) {
+            ex.printStackTrace();
+        }
+        txtColheita.setToolTipText("Informe a data em que se preve a colheita da plantação");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -132,9 +145,9 @@ public class PlantacaoVIEW extends javax.swing.JInternalFrame {
                     .addComponent(jLabel2)
                     .addComponent(txtArea, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jLabel3)
-                    .addComponent(txtColheita, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtColheita, javax.swing.GroupLayout.PREFERRED_SIZE, 19, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel6)
@@ -622,7 +635,7 @@ public class PlantacaoVIEW extends javax.swing.JInternalFrame {
     private javax.swing.JTable jtlConsultaFazenda;
     private javax.swing.JTable jtlConsultaPlantacao;
     private javax.swing.JTextField txtArea;
-    private javax.swing.JTextField txtColheita;
+    private javax.swing.JFormattedTextField txtColheita;
     private javax.swing.JTextField txtConsulta;
     private javax.swing.JTextField txtCultivo;
     private javax.swing.JTextField txtFazenda;

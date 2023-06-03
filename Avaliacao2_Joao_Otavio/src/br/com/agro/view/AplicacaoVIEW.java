@@ -1,17 +1,22 @@
 package br.com.agro.view;
 
+import br.com.agro.ctr.AplicacaoCTR;
+import br.com.agro.ctr.PlantacaoCTR;
+import br.com.agro.ctr.ProdutoCTR;
+import br.com.agro.dto.AplicacaoDTO;
+import br.com.agro.dto.FazendaDTO;
+import br.com.agro.dto.PlantacaoDTO;
+import br.com.agro.dto.ProdutoDTO;
 import java.awt.Dimension;
+import java.sql.ResultSet;
+import java.util.Date;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
-import java.sql.ResultSet;
-import br.com.agro.dto.AplicacaoDTO;
-import br.com.agro.ctr.AplicacaoCTR;
-import br.com.agro.dto.ProdutoDTO;
-import br.com.agro.ctr.ProdutoCTR;
-import br.com.agro.dto.PlantacaoDTO;
-import br.com.agro.ctr.PlantacaoCTR;
-import java.util.Date;
 
+/**
+ *
+ * @author jotav
+ */
 public class AplicacaoVIEW extends javax.swing.JInternalFrame {
 
     AplicacaoCTR aplicacaoCTR = new AplicacaoCTR();
@@ -20,193 +25,270 @@ public class AplicacaoVIEW extends javax.swing.JInternalFrame {
     ProdutoDTO produtoDTO = new ProdutoDTO();
     PlantacaoCTR plantacaoCTR = new PlantacaoCTR();
     PlantacaoDTO plantacaoDTO = new PlantacaoDTO();
-    
+    FazendaDTO fazendaDTO = new FazendaDTO();
+
     ResultSet rs;
     DefaultTableModel modelo_jtl_consultar_pla;
     DefaultTableModel modelo_jtl_consultar_pro;
     DefaultTableModel modelo_jtl_consultar_pro_selecionado;
-    
+
+    /**
+     * Creates new form AplicacaoVIEW
+     */
     public AplicacaoVIEW() {
         initComponents();
-        liberaCampos(false);
-        liberaBotoes(true, false, false, true);
-        modelo_jtl_consultar_pla = (DefaultTableModel) jtl_consultar_pla.getModel();
-        modelo_jtl_consultar_pro = (DefaultTableModel) jtl_consultar_pro.getModel();
-        modelo_jtl_consultar_pro_selecionado = (DefaultTableModel) jtl_consultar_pro_selecionado.getModel();
+        modelo_jtl_consultar_pla = (DefaultTableModel) jtlConsultaPlantacao.getModel();
+        modelo_jtl_consultar_pro = (DefaultTableModel) jtlConsultaProduto.getModel();
+        modelo_jtl_consultar_pro_selecionado = (DefaultTableModel) jtlAplicacao.getModel();
     }
-    
-    public void setPosicao() {
-        Dimension d = this.getDesktopPane().getSize();
-        this.setLocation((d.width - this.getSize().width) / 2, (d.height - this.getSize().height) / 2); 
-    }//Fecha método setPosicao()
-    
-    private void preencheTabelaPlantacao(String nome_pla){
-        try{
-            //Limpa todas as linhas
-            modelo_jtl_consultar_pla.setNumRows(0);
-            //Enquanto tiver linhas - faça
-            plantacaoDTO.setCultivo_pla(nome_pla);
-            rs = plantacaoCTR.consultarPlantacao(plantacaoDTO, 1); //1 = é a pesquisa por nome na classe DAO
-            while(rs.next()){
-                modelo_jtl_consultar_pla.addRow(new Object[]{
-                  rs.getString("id_pla"),
-                  rs.getString("nome_pla"),
-                });
-            }        
-        }
-        catch(Exception erTab){
-            System.out.println("Erro SQL: "+erTab);
-        } 
-    }//Fecha método preencheTabela(String nome)
-    
-    private void preencheTabelaProduto(String nome_prod){
-        try{
-            //Limpa todas as linhas
-            modelo_jtl_consultar_pro.setNumRows(0);
-            //Enquanto tiver linhas - faça
-            produtoDTO.setNome_pro(nome_prod);
-            rs = produtoCTR.consultarProduto(produtoDTO, 1); //1 = é a pesquisa por nome na classe DAO
-            while(rs.next()){
-                modelo_jtl_consultar_pro.addRow(new Object[]{
-                  rs.getString("id_pro"),
-                  rs.getString("nome_pro"),
-                  rs.getDouble("val_pro")
-                });
-            }        
-        }
-        catch(Exception erTab){
-            System.out.println("Erro SQL: "+erTab);
-        } 
-    }
-    
-    private void gravar(){
-        aplicacaoDTO.setDta_apl(new Date());
-        aplicacaoDTO.setValor_apl(Double.parseDouble(total_aplicacao.getText()));
-        plantacaoDTO.setId_pla(Integer.parseInt(String.valueOf(jtl_consultar_pla.getValueAt(
-                jtl_consultar_pla.getSelectedRow(), 0))));
-        
-        JOptionPane.showMessageDialog(null, aplicacaoCTR.inserirAplicacao(aplicacaoDTO, plantacaoDTO, 
-                jtl_consultar_pro_selecionado));
-    }
-    
-    private void adicionaProdutoSelecionado(int id_prod, String nome_prod, double p_aplicacao_prod){
-        try {
-            modelo_jtl_consultar_pro_selecionado.addRow(new Object[]{
-                id_prod, nome_prod, p_aplicacao_prod, 0
-            });
-        } catch (Exception e) {
-            System.out.println("Erro SQL: " + e.getMessage());
-        }
-    }
-    
-    private void removeProdutoSelecionado(int linha_selecionada){
-        try {
-            if (linha_selecionada >= 0){
-                modelo_jtl_consultar_pro_selecionado.removeRow(linha_selecionada);
-                calculaTotalAplicacao();
-            }
-        } catch (Exception e) {
-            System.out.println("Erro SQL: " + e.getMessage());
-        }
-    }
-    
-    private void calculaTotalAplicacao(){
-        try {
-            double total = 0;
-            for (int cont = 0; cont < jtl_consultar_pro_selecionado.getRowCount(); cont++){
-                total += (Double.parseDouble(String.valueOf(jtl_consultar_pro_selecionado.getValueAt(cont, 2))) * 
-                        (Integer.parseInt(String.valueOf(jtl_consultar_pro_selecionado.getValueAt(cont, 3)))));
-            }
-            total_aplicacao.setText(String.valueOf(total));
-        } catch (Exception e) {
-            System.out.println("Erro SQL: " + e.getMessage());
-        }
-    }
-    
-    private void limpaCampos(){
-        pesquisa_nome_pla.setText("");
-        pesquisa_nome_pro.setText("");
-        modelo_jtl_consultar_pla.setNumRows(0);
-        modelo_jtl_consultar_pro.setNumRows(0);
-        modelo_jtl_consultar_pro_selecionado.setNumRows(0);
-    }
-    
-    private void liberaCampos(boolean a){
-        pesquisa_nome_pla.setEnabled(a);
-        btnPesquisarPla.setEnabled(a);
-        jtl_consultar_pla.setEnabled(a);
-        pesquisa_nome_pro.setEnabled(a);
-        btnPesquisarPro.setEnabled(a);
-        jtl_consultar_pro.setEnabled(a);
-        btnProAdd.setEnabled(a);
-        btnProRem.setEnabled(a);
-        jtl_consultar_pro_selecionado.setEnabled(a);
-        total_aplicacao.setText("0.00");
-    }
-    
-    private void liberaBotoes(boolean a, boolean b, boolean c, boolean d){
-        btnNovo.setEnabled(a);
-        btnSalvar.setEnabled(b);
-        btnCancelar.setEnabled(c);
-        btnSair.setEnabled(d);
-    }
-    
-    private boolean verificaPreenchimento(){
-        if (jtl_consultar_pla.getSelectedRowCount() <= 0){
-            JOptionPane.showMessageDialog(null, "Deve ser selecionado um plantacao! ");
-            jtl_consultar_pla.requestFocus();
-            return false;
-        } else {
-            if (jtl_consultar_pro_selecionado.getRowCount() <= 0){
-                JOptionPane.showMessageDialog(null, "É necessário adicionar ao menos 1 produto no pedido! ");
-                jtl_consultar_pro_selecionado.requestFocus();
-                return false;
-            } else {
-                int verifica = 0;
-                for (int cont = 0; cont < jtl_consultar_pro_selecionado.getRowCount(); cont++){
-                    if (String.valueOf(jtl_consultar_pro_selecionado.getValueAt(cont, 3)).equalsIgnoreCase("null")){
-                        verifica++;
-                    }
-                }
-                if (verifica > 0){
-                    JOptionPane.showMessageDialog(null, "A quantidade de cada produto deve ser informada! ");
-                    jtl_consultar_pro_selecionado.requestFocus();
-                    return false;
-                } else {
-                    return true;
-                }
-            }
-        }
-    }
-    
+
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
+     */
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jPanel4 = new javax.swing.JPanel();
+        jLabel5 = new javax.swing.JLabel();
+        txtFazenda = new javax.swing.JTextField();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        jtlConsultaPlantacao = new javax.swing.JTable();
+        btnFazenda = new javax.swing.JButton();
+        jPanel5 = new javax.swing.JPanel();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        jtlAplicacao = new javax.swing.JTable();
+        btnAdd = new javax.swing.JButton();
+        btnRem = new javax.swing.JButton();
+        jPanel6 = new javax.swing.JPanel();
+        jLabel7 = new javax.swing.JLabel();
+        txtProduto = new javax.swing.JTextField();
+        jScrollPane4 = new javax.swing.JScrollPane();
+        jtlConsultaProduto = new javax.swing.JTable();
+        btnProduto = new javax.swing.JButton();
+        jPanel3 = new javax.swing.JPanel();
         btnNovo = new javax.swing.JButton();
         btnSalvar = new javax.swing.JButton();
         btnCancelar = new javax.swing.JButton();
         btnSair = new javax.swing.JButton();
-        btnProAdd = new javax.swing.JButton();
-        btnProRem = new javax.swing.JButton();
-        jPanel1 = new javax.swing.JPanel();
-        pesquisa_nome_pla = new javax.swing.JTextField();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jtl_consultar_pla = new javax.swing.JTable();
-        btnPesquisarPla = new javax.swing.JButton();
-        cliente = new javax.swing.JLabel();
-        jPanel2 = new javax.swing.JPanel();
-        vendas = new javax.swing.JLabel();
+        jLabel1 = new javax.swing.JLabel();
         total_aplicacao = new javax.swing.JLabel();
-        jPanel3 = new javax.swing.JPanel();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        jtl_consultar_pro = new javax.swing.JTable();
-        pesquisa_nome_pro = new javax.swing.JTextField();
-        jLabel6 = new javax.swing.JLabel();
-        btnPesquisarPro = new javax.swing.JButton();
-        jPanel4 = new javax.swing.JPanel();
-        jScrollPane3 = new javax.swing.JScrollPane();
-        jtl_consultar_pro_selecionado = new javax.swing.JTable();
+
+        jPanel4.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Plantação", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Dialog", 1, 11))); // NOI18N
+
+        jLabel5.setText("Fazenda:");
+
+        txtFazenda.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txtFazendaKeyPressed(evt);
+            }
+        });
+
+        jtlConsultaPlantacao.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "ID", "Fazenda", "Cultivo"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jScrollPane2.setViewportView(jtlConsultaPlantacao);
+        if (jtlConsultaPlantacao.getColumnModel().getColumnCount() > 0) {
+            jtlConsultaPlantacao.getColumnModel().getColumn(0).setResizable(false);
+            jtlConsultaPlantacao.getColumnModel().getColumn(2).setResizable(false);
+        }
+
+        btnFazenda.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/com/agro/view/imagens/pesquisar.png"))); // NOI18N
+        btnFazenda.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnFazendaActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
+        jPanel4.setLayout(jPanel4Layout);
+        jPanel4Layout.setHorizontalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel5)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(txtFazenda, javax.swing.GroupLayout.PREFERRED_SIZE, 218, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnFazenda, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(20, 20, 20))
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        jPanel4Layout.setVerticalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel5)
+                            .addComponent(txtFazenda, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(btnFazenda))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+        );
+
+        jPanel5.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Proprietario", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Dialog", 1, 11))); // NOI18N
+
+        jtlAplicacao.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "ID", "Nome", "Valor", "QTD"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, true
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jtlAplicacao.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                jtlAplicacaoFocusLost(evt);
+            }
+        });
+        jtlAplicacao.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                jtlAplicacaoKeyPressed(evt);
+            }
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                jtlAplicacaoKeyReleased(evt);
+            }
+        });
+        jScrollPane3.setViewportView(jtlAplicacao);
+        if (jtlAplicacao.getColumnModel().getColumnCount() > 0) {
+            jtlAplicacao.getColumnModel().getColumn(0).setResizable(false);
+            jtlAplicacao.getColumnModel().getColumn(1).setResizable(false);
+            jtlAplicacao.getColumnModel().getColumn(2).setResizable(false);
+            jtlAplicacao.getColumnModel().getColumn(3).setResizable(false);
+        }
+
+        btnAdd.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/com/agro/view/imagens/adicionar.png"))); // NOI18N
+        btnAdd.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAddActionPerformed(evt);
+            }
+        });
+
+        btnRem.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/com/agro/view/imagens/lixo.png"))); // NOI18N
+        btnRem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRemActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
+        jPanel5.setLayout(jPanel5Layout);
+        jPanel5Layout.setHorizontalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel5Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(btnAdd)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btnRem)
+                .addContainerGap())
+            .addComponent(jScrollPane3)
+        );
+        jPanel5Layout.setVerticalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel5Layout.createSequentialGroup()
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnAdd)
+                    .addComponent(btnRem)))
+        );
+
+        jPanel6.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Produto", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Dialog", 1, 11))); // NOI18N
+
+        jLabel7.setText("Nome:");
+
+        txtProduto.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txtProdutoKeyPressed(evt);
+            }
+        });
+
+        jtlConsultaProduto.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "ID", "Nome", "Valor"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jScrollPane4.setViewportView(jtlConsultaProduto);
+        if (jtlConsultaProduto.getColumnModel().getColumnCount() > 0) {
+            jtlConsultaProduto.getColumnModel().getColumn(0).setResizable(false);
+            jtlConsultaProduto.getColumnModel().getColumn(1).setResizable(false);
+            jtlConsultaProduto.getColumnModel().getColumn(2).setResizable(false);
+        }
+
+        btnProduto.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/com/agro/view/imagens/pesquisar.png"))); // NOI18N
+        btnProduto.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnProdutoActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
+        jPanel6.setLayout(jPanel6Layout);
+        jPanel6Layout.setHorizontalGroup(
+            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel6Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel7)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(txtProduto, javax.swing.GroupLayout.PREFERRED_SIZE, 226, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(btnProduto, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(6, 6, 6))
+            .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+        );
+        jPanel6Layout.setVerticalGroup(
+            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel6Layout.createSequentialGroup()
+                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel6Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel7)
+                            .addComponent(txtProduto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(btnProduto))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
 
         btnNovo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/com/agro/view/imagens/novo.png"))); // NOI18N
         btnNovo.setText("Novo");
@@ -240,246 +322,107 @@ public class AplicacaoVIEW extends javax.swing.JInternalFrame {
             }
         });
 
-        btnProAdd.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/com/agro/view/imagens/prod_add.png"))); // NOI18N
-        btnProAdd.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnProAddActionPerformed(evt);
-            }
-        });
+        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(btnNovo)
+                .addGap(18, 18, 18)
+                .addComponent(btnSalvar)
+                .addGap(18, 18, 18)
+                .addComponent(btnCancelar)
+                .addGap(18, 18, 18)
+                .addComponent(btnSair)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnNovo)
+                    .addComponent(btnSalvar)
+                    .addComponent(btnCancelar)
+                    .addComponent(btnSair))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
 
-        btnProRem.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/com/agro/view/imagens/prod_rem.png"))); // NOI18N
-        btnProRem.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnProRemActionPerformed(evt);
-            }
-        });
+        jLabel1.setFont(new java.awt.Font("Dialog", 1, 36)); // NOI18N
+        jLabel1.setText("Valor da Aplicação:");
 
-        jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-        jPanel1.add(pesquisa_nome_pla, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 40, 226, -1));
-
-        jtl_consultar_pla.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-
-            },
-            new String [] {
-                "ID", "Nome"
-            }
-        ) {
-            boolean[] canEdit = new boolean [] {
-                false, false
-            };
-
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
-            }
-        });
-        jtl_consultar_pla.getTableHeader().setReorderingAllowed(false);
-        jScrollPane1.setViewportView(jtl_consultar_pla);
-
-        jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(6, 71, 348, 110));
-
-        btnPesquisarPla.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/com/agro/view/imagens/pesquisar.png"))); // NOI18N
-        btnPesquisarPla.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnPesquisarPlaActionPerformed(evt);
-            }
-        });
-        jPanel1.add(btnPesquisarPla, new org.netbeans.lib.awtextra.AbsoluteConstraints(296, 29, 63, -1));
-
-        cliente.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        cliente.setText("Plantação:");
-        jPanel1.add(cliente, new org.netbeans.lib.awtextra.AbsoluteConstraints(6, 43, -1, -1));
-
-        jPanel2.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-
-        vendas.setFont(new java.awt.Font("Segoe UI", 1, 20)); // NOI18N
-        vendas.setText("TOTAL DE VENDAS: ");
-        jPanel2.add(vendas, new org.netbeans.lib.awtextra.AbsoluteConstraints(6, 18, 214, 64));
-
-        total_aplicacao.setFont(new java.awt.Font("Segoe UI", 1, 20)); // NOI18N
-        total_aplicacao.setForeground(new java.awt.Color(0, 204, 51));
+        total_aplicacao.setFont(new java.awt.Font("Dialog", 0, 36)); // NOI18N
         total_aplicacao.setText("0.00");
-        jPanel2.add(total_aplicacao, new org.netbeans.lib.awtextra.AbsoluteConstraints(226, 18, 128, 64));
-
-        jPanel3.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-
-        jtl_consultar_pro.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-
-            },
-            new String [] {
-                "ID", "Nome", "Valor"
-            }
-        ) {
-            boolean[] canEdit = new boolean [] {
-                false, false, false
-            };
-
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
-            }
-        });
-        jtl_consultar_pro.getTableHeader().setReorderingAllowed(false);
-        jScrollPane2.setViewportView(jtl_consultar_pro);
-
-        jPanel3.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(6, 70, 465, 112));
-        jPanel3.add(pesquisa_nome_pro, new org.netbeans.lib.awtextra.AbsoluteConstraints(66, 6, 348, -1));
-
-        jLabel6.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        jLabel6.setText("Produto:");
-        jPanel3.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(6, 9, -1, -1));
-
-        btnPesquisarPro.setIcon(new javax.swing.ImageIcon(getClass().getResource("/br/com/agro/view/imagens/pesquisar.png"))); // NOI18N
-        btnPesquisarPro.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnPesquisarProActionPerformed(evt);
-            }
-        });
-        jPanel3.add(btnPesquisarPro, new org.netbeans.lib.awtextra.AbsoluteConstraints(426, 6, 53, -1));
-
-        jPanel4.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-
-        jtl_consultar_pro_selecionado.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-
-            },
-            new String [] {
-                "ID", "Nome", "Valor", "QTD"
-            }
-        ) {
-            boolean[] canEdit = new boolean [] {
-                false, false, false, true
-            };
-
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
-            }
-        });
-        jtl_consultar_pro_selecionado.getTableHeader().setReorderingAllowed(false);
-        jtl_consultar_pro_selecionado.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                jtl_consultar_pro_selecionadoKeyReleased(evt);
-            }
-        });
-        jScrollPane3.setViewportView(jtl_consultar_pro_selecionado);
-        if (jtl_consultar_pro_selecionado.getColumnModel().getColumnCount() > 0) {
-            jtl_consultar_pro_selecionado.getColumnModel().getColumn(1).setPreferredWidth(400);
-        }
-
-        jPanel4.add(jScrollPane3, new org.netbeans.lib.awtextra.AbsoluteConstraints(16, 12, 465, 99));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, 353, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(226, 226, 226)
-                        .addComponent(btnNovo, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(47, 47, 47)
-                        .addComponent(btnSalvar, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(47, 47, 47)
-                        .addComponent(btnCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(67, 67, 67)
-                        .addComponent(btnSair, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(31, 31, 31)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 373, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(195, 195, 195)
-                                .addComponent(btnProAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(btnProRem, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(21, 21, 21)
+                        .addComponent(jLabel1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(total_aplicacao, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addContainerGap())
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(184, 184, 184))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(59, 59, 59)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(btnProAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btnProRem, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addContainerGap()
+                        .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, 154, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(11, 11, 11)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 27, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnSair)
-                    .addComponent(btnCancelar)
-                    .addComponent(btnSalvar)
-                    .addComponent(btnNovo))
-                .addContainerGap())
+                        .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(36, 36, 36)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel1)
+                            .addComponent(total_aplicacao))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(29, 29, 29)
+                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void txtFazendaKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtFazendaKeyPressed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtFazendaKeyPressed
+
+    private void btnFazendaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFazendaActionPerformed
+        preencheTabelaPlantacao(txtFazenda.getText());
+    }//GEN-LAST:event_btnFazendaActionPerformed
+
+    private void txtProdutoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtProdutoKeyPressed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtProdutoKeyPressed
+
+    private void btnProdutoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnProdutoActionPerformed
+        preencheTabelaProduto(txtProduto.getText());
+    }//GEN-LAST:event_btnProdutoActionPerformed
+
     private void btnNovoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNovoActionPerformed
-     // TODO add your handling code here:
         liberaCampos(true);
         liberaBotoes(false, true, true, true);
     }//GEN-LAST:event_btnNovoActionPerformed
 
-    private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
-        // TODO add your handling code here:
-        limpaCampos();
-        liberaCampos(false);
-        liberaBotoes(true, false, false, true);
-        modelo_jtl_consultar_pla.setNumRows(0);
-        modelo_jtl_consultar_pro.setNumRows(0);
-    }//GEN-LAST:event_btnCancelarActionPerformed
-
-    private void btnSairActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSairActionPerformed
-        // TODO add your handling code here:
-        this.dispose();
-    }//GEN-LAST:event_btnSairActionPerformed
-
-    private void btnPesquisarProActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPesquisarProActionPerformed
-        // TODO add your handling code here:
-        preencheTabelaProduto(pesquisa_nome_pro.getText());
-    }//GEN-LAST:event_btnPesquisarProActionPerformed
-
-    private void btnProAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnProAddActionPerformed
-        // TODO add your handling code here:
-        adicionaProdutoSelecionado(Integer.parseInt(String.valueOf(
-                jtl_consultar_pro.getValueAt(jtl_consultar_pro.getSelectedRow(), 0))), 
-                String.valueOf(jtl_consultar_pro.getValueAt(jtl_consultar_pro.getSelectedRow(), 1)),
-                Double.parseDouble(String.valueOf(jtl_consultar_pro.getValueAt(
-                        jtl_consultar_pro.getSelectedRow(), 2))));
-    }//GEN-LAST:event_btnProAddActionPerformed
-
-    private void btnProRemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnProRemActionPerformed
-        // TODO add your handling code here:
-        removeProdutoSelecionado(jtl_consultar_pro_selecionado.getSelectedRow());
-    }//GEN-LAST:event_btnProRemActionPerformed
-
-    private void jtl_consultar_pro_selecionadoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jtl_consultar_pro_selecionadoKeyReleased
-        // TODO add your handling code here:
-        if (evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
-            calculaTotalAplicacao();
-        }
-    }//GEN-LAST:event_jtl_consultar_pro_selecionadoKeyReleased
-
     private void btnSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalvarActionPerformed
-        // TODO add your handling code here:
         if (verificaPreenchimento()){
             gravar();
             limpaCampos();
@@ -488,36 +431,211 @@ public class AplicacaoVIEW extends javax.swing.JInternalFrame {
         }
     }//GEN-LAST:event_btnSalvarActionPerformed
 
-    private void btnPesquisarPlaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPesquisarPlaActionPerformed
-        // TODO add your handling code here:
-        preencheTabelaPlantacao(pesquisa_nome_pla.getText());
-    }//GEN-LAST:event_btnPesquisarPlaActionPerformed
+    private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
+        limpaCampos();
+        liberaCampos(false);
+        liberaBotoes(true, false, false, false);
+    }//GEN-LAST:event_btnCancelarActionPerformed
 
+    private void btnSairActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSairActionPerformed
+        this.dispose();
+    }//GEN-LAST:event_btnSairActionPerformed
+
+    private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
+        adicionaProdutoSelecionado(Integer.parseInt(String.valueOf(
+                jtlConsultaProduto.getValueAt(jtlConsultaProduto.getSelectedRow(), 0))),
+                String.valueOf(jtlConsultaProduto.getValueAt(jtlConsultaProduto.getSelectedRow(), 1)),
+                Double.parseDouble(String.valueOf(jtlConsultaProduto.getValueAt(
+                        jtlConsultaProduto.getSelectedRow(), 2))));
+    }//GEN-LAST:event_btnAddActionPerformed
+
+    private void btnRemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRemActionPerformed
+        removeProdutoSelecionado(jtlAplicacao.getSelectedRow());
+    }//GEN-LAST:event_btnRemActionPerformed
+
+    private void jtlAplicacaoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jtlAplicacaoKeyPressed
+        if (evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
+            calculaTotalAplicacao();
+        }
+    }//GEN-LAST:event_jtlAplicacaoKeyPressed
+
+    private void jtlAplicacaoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jtlAplicacaoFocusLost
+        calculaTotalAplicacao();
+    }//GEN-LAST:event_jtlAplicacaoFocusLost
+
+    private void jtlAplicacaoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jtlAplicacaoKeyReleased
+        if (evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
+            calculaTotalAplicacao();
+        }
+    }//GEN-LAST:event_jtlAplicacaoKeyReleased
+
+    public void setPosicao() {
+        Dimension d = this.getDesktopPane().getSize();
+        this.setLocation((d.width - this.getSize().width) / 2, (d.height - this.getSize().height) / 2);
+    }//Fecha método setPosicao()
+
+    private void preencheTabelaPlantacao(String nome_pla) {
+        try {
+            //Limpa todas as linhas
+            modelo_jtl_consultar_pla.setNumRows(0);
+            //Enquanto tiver linhas - faça
+            fazendaDTO.setNome_faz(nome_pla);
+            rs = plantacaoCTR.consultarPlantacao(fazendaDTO);
+            while (rs.next()) {
+                modelo_jtl_consultar_pla.addRow(new Object[]{
+                    rs.getString("id_pla"),
+                    rs.getString("nome_faz"),
+                    rs.getString("cultivo_pla"),});
+            }
+        } catch (Exception erTab) {
+            System.out.println("Erro SQL: " + erTab);
+        }
+    }//Fecha método preencheTabela(String nome)
+
+    private void preencheTabelaProduto(String nome_prod) {
+        try {
+            //Limpa todas as linhas
+            modelo_jtl_consultar_pro.setNumRows(0);
+            //Enquanto tiver linhas - faça
+            produtoDTO.setNome_pro(nome_prod);
+            rs = produtoCTR.consultarProduto(produtoDTO, 1); //1 = é a pesquisa por nome na classe DAO
+            while (rs.next()) {
+                modelo_jtl_consultar_pro.addRow(new Object[]{
+                    rs.getString("id_pro"),
+                    rs.getString("nome_pro"),
+                    rs.getDouble("preco_pro")
+                });
+            }
+        } catch (Exception erTab) {
+            System.out.println("Erro SQL: " + erTab);
+        }
+    }
+
+    private void gravar() {
+        aplicacaoDTO.setDta_apl(new Date());
+        calculaTotalAplicacao();
+        aplicacaoDTO.setValor_apl(Double.parseDouble(total_aplicacao.getText()));
+        plantacaoDTO.setId_pla(Integer.parseInt(String.valueOf(jtlConsultaPlantacao.getValueAt(
+                jtlConsultaPlantacao.getSelectedRow(), 0))));
+
+        JOptionPane.showMessageDialog(null, aplicacaoCTR.inserirAplicacao(aplicacaoDTO, plantacaoDTO,
+                jtlAplicacao));
+    }
+
+    private void adicionaProdutoSelecionado(int id_prod, String nome_prod, double p_aplicacao_prod) {
+        try {
+            modelo_jtl_consultar_pro_selecionado.addRow(new Object[]{
+                id_prod, nome_prod, p_aplicacao_prod, 0
+            });
+        } catch (Exception e) {
+            System.out.println("Erro SQL: " + e.getMessage());
+        }
+    }
+
+    private void removeProdutoSelecionado(int linha_selecionada) {
+        try {
+            if (linha_selecionada >= 0) {
+                modelo_jtl_consultar_pro_selecionado.removeRow(linha_selecionada);
+                calculaTotalAplicacao();
+            }
+        } catch (Exception e) {
+            System.out.println("Erro SQL: " + e.getMessage());
+        }
+    }
+
+    private void calculaTotalAplicacao() {
+        try {
+            double total = 0;
+            for (int cont = 0; cont < jtlAplicacao.getRowCount(); cont++) {
+                total += (Double.parseDouble(String.valueOf(jtlAplicacao.getValueAt(cont, 2)))
+                        * (Integer.parseInt(String.valueOf(jtlAplicacao.getValueAt(cont, 3)))));
+            }
+            total_aplicacao.setText(String.valueOf(total));
+        } catch (Exception e) {
+            System.out.println("Erro SQL: " + e.getMessage());
+        }
+    }
+
+    private void limpaCampos() {
+        txtFazenda.setText("");
+        txtProduto.setText("");
+        modelo_jtl_consultar_pla.setNumRows(0);
+        modelo_jtl_consultar_pro.setNumRows(0);
+        modelo_jtl_consultar_pro_selecionado.setNumRows(0);
+    }
+
+    private void liberaCampos(boolean a) {
+        txtFazenda.setEnabled(a);
+        btnFazenda.setEnabled(a);
+        jtlAplicacao.setEnabled(a);
+        txtProduto.setEnabled(a);
+        btnProduto.setEnabled(a);
+        jtlConsultaPlantacao.setEnabled(a);
+        btnAdd.setEnabled(a);
+        btnRem.setEnabled(a);
+        jtlConsultaProduto.setEnabled(a);
+        total_aplicacao.setText("0.00");
+    }
+
+    private void liberaBotoes(boolean a, boolean b, boolean c, boolean d) {
+        btnNovo.setEnabled(a);
+        btnSalvar.setEnabled(b);
+        btnCancelar.setEnabled(c);
+        btnSair.setEnabled(d);
+    }
+
+    private boolean verificaPreenchimento() {
+        if (jtlConsultaPlantacao.getSelectedRowCount() <= 0) {
+            JOptionPane.showMessageDialog(null, "Deve ser selecionado um plantacao! ");
+            jtlConsultaPlantacao.requestFocus();
+            return false;
+        } else {
+            if (jtlAplicacao.getRowCount() <= 0) {
+                JOptionPane.showMessageDialog(null, "É necessário adicionar ao menos 1 produto no pedido! ");
+                jtlAplicacao.requestFocus();
+                return false;
+            } else {
+                int verifica = 0;
+                for (int cont = 0; cont < jtlAplicacao.getRowCount(); cont++) {
+                    if (String.valueOf(jtlAplicacao.getValueAt(cont, 3)).equalsIgnoreCase("null")) {
+                        verifica++;
+                    }
+                }
+                if (verifica > 0) {
+                    JOptionPane.showMessageDialog(null, "A quantidade de cada produto deve ser informada! ");
+                    jtlAplicacao.requestFocus();
+                    return false;
+                } else {
+                    return true;
+                }
+            }
+        }
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnAdd;
     private javax.swing.JButton btnCancelar;
+    private javax.swing.JButton btnFazenda;
     private javax.swing.JButton btnNovo;
-    private javax.swing.JButton btnPesquisarPla;
-    private javax.swing.JButton btnPesquisarPro;
-    private javax.swing.JButton btnProAdd;
-    private javax.swing.JButton btnProRem;
+    private javax.swing.JButton btnProduto;
+    private javax.swing.JButton btnRem;
     private javax.swing.JButton btnSair;
     private javax.swing.JButton btnSalvar;
-    private javax.swing.JLabel cliente;
-    private javax.swing.JLabel jLabel6;
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel7;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
-    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JPanel jPanel5;
+    private javax.swing.JPanel jPanel6;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
-    private javax.swing.JTable jtl_consultar_pla;
-    private javax.swing.JTable jtl_consultar_pro;
-    private javax.swing.JTable jtl_consultar_pro_selecionado;
-    private javax.swing.JTextField pesquisa_nome_pla;
-    private javax.swing.JTextField pesquisa_nome_pro;
+    private javax.swing.JScrollPane jScrollPane4;
+    private javax.swing.JTable jtlAplicacao;
+    private javax.swing.JTable jtlConsultaPlantacao;
+    private javax.swing.JTable jtlConsultaProduto;
     private javax.swing.JLabel total_aplicacao;
-    private javax.swing.JLabel vendas;
+    private javax.swing.JTextField txtFazenda;
+    private javax.swing.JTextField txtProduto;
     // End of variables declaration//GEN-END:variables
 }
