@@ -42,7 +42,6 @@ area_pla double precision,
 cultivo_pla varchar(60),
 id_faz integer,
 constraint fk_faz foreign key (id_faz) references fazenda (id_faz),
-constraint dta_cul_loc_faz_pla unique (dta_pla, cultivo_pla, id_faz),
 constraint pk_pla primary key (id_pla)
 );
 create table aplicacao(
@@ -71,8 +70,5 @@ create table funcionario(
 	constraint pk_fun primary key (id_fun)
 );
 insert into funcionario (nome_fun, cpf_fun, senha_fun, login, tipo_fun) values(
-'Joao Otavio', '123.123.123-12', '21232f297a57a5a743894a0e4a801fc3', 'jotavio', true
+'Joao Otavio', '123.123.123-12', '02102302F02907A057FA5FA7043F8904A00E04AF8001FFC3', 'jotavio', true
 );
-insert into funcionario (nome_fun, cpf_fun, senha_fun, login, tipo_fun) values(
-'Andre Gobbi', 'XXX.XXX.XXX-XX', 'e8d95a51f3af4a3b134bf6bb680a213a', 'gobbi', false
-)

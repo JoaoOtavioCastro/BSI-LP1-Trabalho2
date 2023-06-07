@@ -5,10 +5,12 @@
  */
 package br.com.agro.view;
 
+import br.com.agro.dto.FuncionarioDTO;
 import javax.swing.JOptionPane;
 import java.awt.Image;
 import java.awt.Graphics;
 import javax.swing.ImageIcon;
+
 /**
  *
  * @author jotav
@@ -18,9 +20,12 @@ public class PrincipalVIEW extends javax.swing.JFrame {
     /**
      * Creates new form PrincipalVIEW
      */
-    public PrincipalVIEW() {
-        initComponents();       
+    public PrincipalVIEW(FuncionarioDTO fdto) {
+        initComponents();
         this.setLocationRelativeTo(null);
+        if (!fdto.isTipo_fun()) {
+            itemMFuncionario.setVisible(false);
+        }
     }
 
     /**
@@ -40,20 +45,21 @@ public class PrincipalVIEW extends javax.swing.JFrame {
             }
         };
         menuBar = new javax.swing.JMenuBar();
-        fileMenu = new javax.swing.JMenu();
+        menuCadastro = new javax.swing.JMenu();
         itemMFazenda = new javax.swing.JMenuItem();
         itemMFornecedor = new javax.swing.JMenuItem();
         itemMPlantacao = new javax.swing.JMenuItem();
         itemMProduto = new javax.swing.JMenuItem();
         itemMProprietario = new javax.swing.JMenuItem();
+        itemMFuncionario = new javax.swing.JMenuItem();
         editMenu = new javax.swing.JMenu();
         itemMAplicacao = new javax.swing.JMenuItem();
         menuSair = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        fileMenu.setMnemonic('f');
-        fileMenu.setText("Cadastro");
+        menuCadastro.setMnemonic('f');
+        menuCadastro.setText("Cadastro");
 
         itemMFazenda.setMnemonic('o');
         itemMFazenda.setText("Fazenda");
@@ -62,7 +68,7 @@ public class PrincipalVIEW extends javax.swing.JFrame {
                 itemMFazendaActionPerformed(evt);
             }
         });
-        fileMenu.add(itemMFazenda);
+        menuCadastro.add(itemMFazenda);
 
         itemMFornecedor.setMnemonic('s');
         itemMFornecedor.setText("Fornecedor");
@@ -76,7 +82,7 @@ public class PrincipalVIEW extends javax.swing.JFrame {
                 itemMFornecedorActionPerformed(evt);
             }
         });
-        fileMenu.add(itemMFornecedor);
+        menuCadastro.add(itemMFornecedor);
 
         itemMPlantacao.setMnemonic('a');
         itemMPlantacao.setText("Plantação");
@@ -85,7 +91,7 @@ public class PrincipalVIEW extends javax.swing.JFrame {
                 itemMPlantacaoActionPerformed(evt);
             }
         });
-        fileMenu.add(itemMPlantacao);
+        menuCadastro.add(itemMPlantacao);
 
         itemMProduto.setMnemonic('x');
         itemMProduto.setText("Produto");
@@ -94,7 +100,7 @@ public class PrincipalVIEW extends javax.swing.JFrame {
                 itemMProdutoActionPerformed(evt);
             }
         });
-        fileMenu.add(itemMProduto);
+        menuCadastro.add(itemMProduto);
 
         itemMProprietario.setText("Proprietário");
         itemMProprietario.addActionListener(new java.awt.event.ActionListener() {
@@ -102,9 +108,17 @@ public class PrincipalVIEW extends javax.swing.JFrame {
                 itemMProprietarioActionPerformed(evt);
             }
         });
-        fileMenu.add(itemMProprietario);
+        menuCadastro.add(itemMProprietario);
 
-        menuBar.add(fileMenu);
+        itemMFuncionario.setText("Funcionario");
+        itemMFuncionario.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                itemMFuncionarioActionPerformed(evt);
+            }
+        });
+        menuCadastro.add(itemMFuncionario);
+
+        menuBar.add(menuCadastro);
 
         editMenu.setMnemonic('e');
         editMenu.setText("Realização");
@@ -179,41 +193,14 @@ public class PrincipalVIEW extends javax.swing.JFrame {
         abreProprietarioVIEW();
     }//GEN-LAST:event_itemMProprietarioActionPerformed
 
+    private void itemMFuncionarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemMFuncionarioActionPerformed
+        abreFuncionarioVIEW();
+    }//GEN-LAST:event_itemMFuncionarioActionPerformed
+
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(PrincipalVIEW.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(PrincipalVIEW.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(PrincipalVIEW.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(PrincipalVIEW.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new PrincipalVIEW().setVisible(true);
-            }
-        });
-    }
- private void sair() {
+    private void sair() {
         Object[] options = {"Sair", "Cancelar"};
         if (JOptionPane.showOptionDialog(null, "Deseja Sair do Sistema", "Informação",
                 JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null, options, options[0]) == 0) {
@@ -233,6 +220,13 @@ public class PrincipalVIEW extends javax.swing.JFrame {
         this.desktopPane.add(fazendaVIEW);
         fazendaVIEW.setVisible(true);
         fazendaVIEW.setPosicao();
+    }
+
+    private void abreFuncionarioVIEW() {
+        FuncionarioVIEW funcionarioVIEW = new FuncionarioVIEW();
+        this.desktopPane.add(funcionarioVIEW);
+        funcionarioVIEW.setVisible(true);
+        funcionarioVIEW.setPosicao();
     }
 
     private void abreProdutoVIEW() {
@@ -265,14 +259,15 @@ public class PrincipalVIEW extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JDesktopPane desktopPane;
     private javax.swing.JMenu editMenu;
-    private javax.swing.JMenu fileMenu;
     private javax.swing.JMenuItem itemMAplicacao;
     private javax.swing.JMenuItem itemMFazenda;
     private javax.swing.JMenuItem itemMFornecedor;
+    private javax.swing.JMenuItem itemMFuncionario;
     private javax.swing.JMenuItem itemMPlantacao;
     private javax.swing.JMenuItem itemMProduto;
     private javax.swing.JMenuItem itemMProprietario;
     private javax.swing.JMenuBar menuBar;
+    private javax.swing.JMenu menuCadastro;
     private javax.swing.JMenu menuSair;
     // End of variables declaration//GEN-END:variables
 
